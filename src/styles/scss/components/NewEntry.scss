@@ -1,0 +1,76 @@
+@import '../base/variables'; // Importing variables
+
+.new-entry {
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border-style: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .new-entry-title{
+        color: $primary-color;
+        margin-bottom: 10px;
+        margin-left: 20px;
+    }
+
+    .date {
+        font-size: small;
+    }
+
+    .day{
+        font-weight: bold;
+    }
+
+    .bullet-list{
+        padding-bottom: 20px;
+        margin: 0;
+
+        .bullet {
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            background-color: $primary-color;
+        }
+    }
+
+    .bullet-list {
+        list-style-type: none; // Remove default list styling
+        padding: 0; // Remove default padding
+        margin: 0; // Remove default margin
+      }
+      
+      .bullet-list li {
+        display: flex; // Use flexbox for alignment
+        align-items: flex-start; // Align items to the start
+      }
+      
+      .bullet-list li::before {
+        content: '•'; // Add bullet point
+        margin-right: 10px; // Space between bullet and text
+        font-size: 1.7rem; // Adjust bullet size if needed
+        line-height: 1.0; // Align bullet with the first line of text
+        color: lighten($color: $bg-color, $amount: 20%); // Set bullet color
+      }
+
+    .text-input {
+        border-radius: 5px;
+        border-style: none;
+        background-color: lighten($color: $bg-color, $amount: 0%);
+        width: 70%;
+        resize: none;
+        color: $primary-color;
+        padding: 0px;
+
+
+        &:focus {
+            outline: none;
+        }
+
+        &::placeholder {
+            color: lighten($color: $bg-color, $amount: 20%);
+            font-style: italic;
+        }
+    }
+}

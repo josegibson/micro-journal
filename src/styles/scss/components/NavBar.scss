@@ -1,0 +1,39 @@
+@import '../base/variables'; // Importing variables
+
+.navbar {
+    height: 100vh; // Full height
+    background-color: lighten($bg-color, 20%);
+    padding: 20px; // Padding around the content
+    display: flex; // Use flexbox for alignment
+    flex-direction: column; // Vertical layout
+    justify-content: start; // Space between elements
+  
+    h2 {
+      margin-bottom: 20px; // Spacing below the title
+    }
+  
+    .navbar-links {
+      list-style-type: none; // Remove default list styling
+      padding: 0%;
+      width: 100%; // Full width
+  
+      li {
+        button {
+          width: 100%; // Full width
+          color: #4f4f4f; // Link color
+          font-weight: bold; // Bold text for links
+          margin: 5px;
+          padding: 10px 30px;
+          background-color: lighten($bg-color, 30%); // Darker shade for links
+          border-radius: 5px;
+          text-align: left;
+          border-style: none;
+  
+          &:hover {
+            color: #ffffff; // Darker shade on hover
+          }
+        }
+      }
+    }
+  }
+  

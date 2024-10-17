@@ -1,0 +1,9 @@
+@import '../base/variables'; // Importing variables
+
+.content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 20px; // Add some padding
+    height: 100vh; // Ensure it takes the full height
+  }

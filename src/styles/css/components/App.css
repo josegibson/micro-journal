@@ -1,0 +1,9 @@
+.content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px;
+  height: 100vh;
+}
+
+/*# sourceMappingURL=App.css.map */
