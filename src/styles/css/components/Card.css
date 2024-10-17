@@ -1,0 +1,15 @@
+.card {
+  background-color: #17171b;
+  border-style: none;
+  border-radius: 20px;
+  padding: 25px 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  transition: all 0.1s ease-in-out;
+}
+.card:hover {
+  background-color: rgb(46.46, 46.46, 54.54);
+}
+
+/*# sourceMappingURL=Card.css.map */

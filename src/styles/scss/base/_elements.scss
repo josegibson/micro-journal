@@ -1,11 +1,66 @@
-@import '_variables';
+@import "./_variables";
 
-
-body{
-    background-color: $bg-color;
-    color: $primary-color;
-    height: 100vh;
-    font-family: 'Roboto', sans-serif;
+body {
+  background-color: $bg-color;
+  color: $primary-color;
+  height: 100vh;
+  // font-family: 
 }
 
+h1 {
+  color: $primary-color;
+  font-weight: 700;
+  font-size: 2.5rem;
+}
 
+h3{
+  color: $primary-color;
+  font-weight: 700;
+  font-size: 1.7rem;
+}
+
+h4 {
+  color: $primary-color;
+  font-size: 1.2rem;
+  line-height: 0;
+  font-weight: 700;
+}
+
+textarea {
+  border-radius: 5px;
+  border-style: none;
+  background-color: transparent;
+  width: 70%;
+  resize: none;
+  color: $primary-color;
+  padding: 0px;
+
+  &:focus {
+    outline: none;
+  }
+
+  &::placeholder {
+    color: lighten($color: $bg-color, $amount: 20%);
+    font-style: italic;
+  }
+}
+
+ul {
+  list-style-type: none; // Remove default list styling
+  padding: 0; // Remove default padding
+  margin: 0; // Remove default margin
+  color: $primary-color; // Set text color
+
+  li {
+    display: flex; // Use flexbox for alignment
+    align-items: flex-start; // Align items to the start
+
+    &:before {
+      content: "•"; // Add bullet point
+      margin-right: 10px; // Space between bullet and text
+      font-size: 1.7rem; // Adjust bullet size if needed
+      line-height: 1; // Align bullet with the first line of text
+      color: lighten($color: $bg-color, $amount: 20%); // Set bullet color
+    }
+  }
+}

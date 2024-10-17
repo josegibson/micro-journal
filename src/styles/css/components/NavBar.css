@@ -1,6 +1,6 @@
 .navbar {
   height: 100vh;
-  background-color: #555555;
+  background-color: rgb(69.92, 69.92, 82.08);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -20,7 +20,7 @@
   font-weight: bold;
   margin: 5px;
   padding: 10px 30px;
-  background-color: rgb(110.5, 110.5, 110.5);
+  background-color: rgb(93.38, 93.38, 109.62);
   border-radius: 5px;
   text-align: left;
   border-style: none;

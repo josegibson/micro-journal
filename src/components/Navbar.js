@@ -9,7 +9,7 @@ function Navbar() {
       <h2>Micro Journaling</h2>
       <ul className="navbar-links">
         <li>
-          <button onClick={() => navigate('/')}>Journal Entries</button>
+          <button onClick={() => navigate('/journals')}>Journal Entries</button>
         </li>
         <li>
           <button onClick={() => navigate('/new-entry')}>New Entry</button>
