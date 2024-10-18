@@ -18,8 +18,9 @@ function BulletListInput() {
   // Retrieve today's journal or initialize with an empty entry
   const entries = journals[formattedToday] || [''];
 
-  // Save entries to context when modified
+  // Save entries to context when modified, excluding empty entries
   const saveEntry = (updatedEntries) => {
+    // const nonEmptyEntries = updatedEntries.filter(entry => entry.trim() !== '');
     handleSaveEntry(today, updatedEntries);
   };
 
@@ -40,6 +41,7 @@ function BulletListInput() {
   const handleSaveEntryOnEnter = (index) => {
     if (entries[index].trim()) {
       const updatedEntries = [...entries];
+      updatedEntries[index] = entries[index].trim(); // Strip whitespace before saving
       if (index === entries.length - 1) {
         updatedEntries.push(''); // Add new empty entry if at last entry
       }
@@ -56,8 +58,13 @@ function BulletListInput() {
     if (index > 0) {
       const updatedEntries = entries.filter((_, i) => i !== index); // Remove entry
       saveEntry(updatedEntries);
+  
       setTimeout(() => {
-        inputRefs.current[index - 1]?.focus(); // Focus previous item
+        const previousInput = inputRefs.current[index - 1];
+        if (previousInput) {
+          previousInput.focus(); // Focus previous item
+          previousInput.setSelectionRange(previousInput.value.length, previousInput.value.length); // Set cursor to end
+        }
       }, 0);
     }
   };
@@ -70,6 +77,15 @@ function BulletListInput() {
     adjustHeight(event.target);
   };
 
+  useEffect(() => {
+    // Adjust height for all textareas on mount
+    inputRefs.current.forEach((textarea) => {
+      if (textarea) {
+        adjustHeight(textarea);
+      }
+    });
+  }, []);
+
   // Focus the last empty entry when updated
   useEffect(() => {
     if (entries.length && entries[entries.length - 1] === "") {
@@ -78,7 +94,7 @@ function BulletListInput() {
   }, [entries]);
 
   return (
-    <ul className="bullet-list">
+    <ul>
       {entries.map((entry, index) => (
         <li key={index}>
           <textarea

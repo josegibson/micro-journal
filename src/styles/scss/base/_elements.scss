@@ -1,5 +1,10 @@
 @import "./_variables";
 
+html {
+  overflow-y: visible;
+  overflow-x: hidden;
+}
+
 body {
   background-color: $bg-color;
   color: $primary-color;

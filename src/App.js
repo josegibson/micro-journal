@@ -1,11 +1,8 @@
-import React, { useEffect } from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { useContext } from "react";
-import JournalEntries from "./components/JournalEntries";
-import NewEntry from "./components/NewEntry";
-import Settings from "./components/Settings";
+import JournalEntries from "./pages/Journals";
+import NewEntry from "./pages/NewEntry";
+import Settings from "./pages/Settings";
 import Navbar from "./components/Navbar";
-import { JournalContext } from "./components/JournalProvider";
 
 function App() {
   const today = new Date();
@@ -16,7 +13,7 @@ function App() {
         <div className="col-3">
           <Navbar />
         </div>
-        <div className="col-9 content">
+        <div className="col-6">
           <Routes>
             <Route path="/journals" element={<JournalEntries />} />
             <Route path="/new-entry/:date?" element={<NewEntry date={today}/>} />

@@ -1,8 +1,12 @@
-
 .content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 20px; // Add some padding
-    height: 100vh; // Ensure it takes the full height
-  }
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  height: 100vh;
+}
+
+.center-active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}

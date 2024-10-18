@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { JournalContext } from "./JournalProvider";
+import { JournalContext } from "../components/JournalProvider";
 import { format } from "date-fns";
 
 const JournalEntries = () => {
@@ -14,8 +14,8 @@ const JournalEntries = () => {
   
 
   return (
-    <div className="journal-entries m-5">
-      <h1 className="text-center">Journal</h1>
+    <div className="text-center">
+      <h1>Journal</h1>
       {Object.keys(journals).length === 0 ? (
         <p>No journal entries available.</p>
       ) : (
@@ -32,6 +32,7 @@ const JournalEntries = () => {
             <ul>
               {journals[date].map((entry, index) => {
                 const trimmedEntry = entry.trim();
+                if (!trimmedEntry) return null; // Skip empty entries
                 return <li key={index}>{trimmedEntry}</li>;
               })}
             </ul>

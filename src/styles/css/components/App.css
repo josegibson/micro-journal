@@ -1,9 +1,14 @@
 .content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: 20px;
   height: 100vh;
+}
+
+.center-active {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 /*# sourceMappingURL=App.css.map */

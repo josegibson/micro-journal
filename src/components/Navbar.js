@@ -1,23 +1,55 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import {
+  FaJournalWhills,
+  FaPen,
+  FaCog,
+  FaArrowLeft,
+  FaArrowRight,
+} from "react-icons/fa";
+import NavbarItem from "./NavbarItem"; // Import the NavbarItem component
+
+const navItems = [
+  { route: "/new-entry", label: "New Entry", icon: <FaPen size={16} /> },
+  {
+    route: "/journals",
+    label: "Journals",
+    icon: <FaJournalWhills size={16} />,
+  },
+
+  { route: "/settings", label: "Settings", icon: <FaCog size={16} /> },
+];
 
 function Navbar() {
-  const navigate = useNavigate();
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleNavbar = () => setIsExpanded((prev) => !prev);
 
   return (
-    <nav className="navbar">
-      <h2>Micro Journaling</h2>
-      <ul className="navbar-links">
-        <li>
-          <button onClick={() => navigate('/journals')}>Journal Entries</button>
-        </li>
-        <li>
-          <button onClick={() => navigate('/new-entry')}>New Entry</button>
-        </li>
-        <li>
-          <button onClick={() => navigate('/settings')}>Settings</button>
-        </li>
-      </ul>
+    <nav className={`navbar ${isExpanded ? "expanded" : "collapsed"}`}>
+      <div className="navbar-content">
+        {navItems.map((item, index) => (
+          <NavbarItem
+            key={index}
+            route={item.route}
+            label={item.label}
+            icon={item.icon}
+            isExpanded={isExpanded}
+          />
+        ))}
+
+        <div className="navbar-toggle">
+          <button
+            onClick={toggleNavbar}
+            aria-label={isExpanded ? "Collapse navbar" : "Expand navbar"}
+          >
+            {isExpanded ? (
+              <FaArrowLeft size={16} />
+            ) : (
+              <FaArrowRight size={16} />
+            )}
+          </button>
+        </div>
+      </div>
     </nav>
   );
 }

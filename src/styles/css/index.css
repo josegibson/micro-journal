@@ -1,4 +1,9 @@
 @charset "UTF-8";
+html {
+  overflow-y: visible;
+  overflow-x: hidden;
+}
+
 body {
   background-color: #17171b;
   color: #ffffff;
@@ -69,40 +74,40 @@ ul li:before {
 .content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   padding: 20px;
   height: 100vh;
 }
 
-.navbar {
-  height: 100vh;
-  background-color: rgb(69.92, 69.92, 82.08);
-  padding: 20px;
+.center-active {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
 }
-.navbar h2 {
-  margin-bottom: 20px;
-}
-.navbar .navbar-links {
-  list-style-type: none;
-  padding: 0%;
+
+.navbar {
+  background-color: transparent;
+  color: rgb(116.84, 116.84, 137.16);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  height: 100vh;
   width: 100%;
 }
-.navbar .navbar-links li button {
-  width: 100%;
-  color: #4f4f4f;
-  font-weight: bold;
-  margin: 5px;
-  padding: 10px 30px;
-  background-color: rgb(93.38, 93.38, 109.62);
-  border-radius: 5px;
-  text-align: left;
-  border-style: none;
+.navbar .navbar-content {
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
-.navbar .navbar-links li button:hover {
-  color: #ffffff;
+.navbar .navbar-content .navbar-toggle {
+  padding: 20px 10px;
+  margin-top: auto;
+}
+.navbar .navbar-content .navbar-toggle button {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
 }
 
 .card {
@@ -110,6 +115,7 @@ ul li:before {
   border-style: none;
   border-radius: 20px;
   padding: 25px 20px;
+  text-align: start;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -117,6 +123,43 @@ ul li:before {
 }
 .card:hover {
   background-color: rgb(46.46, 46.46, 54.54);
+}
+
+.navbar-item {
+  margin: 5px;
+}
+.navbar-item a {
+  background: none;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+.navbar-item a span {
+  margin-left: 10px;
+  font-size: 14px;
+}
+.navbar-item .icon-box {
+  padding: 10px;
+  border-radius: 50%;
+  background-color: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navbar-item.active a {
+  font-weight: bold;
+  color: rgb(199.38, 199.38, 207.62);
+}
+.navbar-item.expanded .icon-box {
+  background-color: rgb(69.92, 69.92, 82.08);
+}
+.navbar-item:hover span {
+  color: rgb(199.38, 199.38, 207.62);
+}
+.navbar-item:hover .icon-box {
+  background-color: rgb(69.92, 69.92, 82.08);
 }
 
 /*# sourceMappingURL=index.css.map */
