@@ -15,8 +15,15 @@ function App() {
         </div>
         <div className="col-6">
           <Routes>
+          <Route
+              path="/"
+              element={<NewEntry date={today} />}
+            />
             <Route path="/journals" element={<JournalEntries />} />
-            <Route path="/new-entry/:date?" element={<NewEntry date={today}/>} />
+            <Route
+              path="/new-entry/:date?"
+              element={<NewEntry date={today} />}
+            />
             <Route path="/settings" element={<Settings />} />
           </Routes>
         </div>
