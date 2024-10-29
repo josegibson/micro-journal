@@ -1,4 +1,4 @@
-import BulletListInput from "../components/BulletListInput";
+import BulletTextArea from "../components/BulletTextArea";
 import { format, parse } from "date-fns";
 import { useParams } from "react-router-dom";
 
@@ -12,12 +12,13 @@ function NewEntry() {
 
 
   return (
-    <div className="content center-active p-3">
+    <div className="content center-active">
       <div className="entry-header">
         <h4>{format(date, "dd MMM")}</h4>
         <h1>{format(date, "EEEE")}</h1>
       </div>
-      <BulletListInput date={date} />
+      <BulletTextArea date={date} />
+      <div className="dummy-container "></div>
     </div>
   );
 }

@@ -1,3 +1,4 @@
+// src/components/BulletTextArea.js
 import React, { useRef, useEffect, useContext } from "react";
 import { JournalContext } from './JournalProvider';
 
@@ -7,7 +8,7 @@ const adjustHeight = (textarea) => {
   textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scroll height
 };
 
-function BulletListInput() {
+function BulletTextArea() {
   const { journals, handleSaveEntry } = useContext(JournalContext);
   const today = new Date();
   const formattedToday = today.toISOString().split('T')[0];
@@ -20,7 +21,6 @@ function BulletListInput() {
 
   // Save entries to context when modified, excluding empty entries
   const saveEntry = (updatedEntries) => {
-    // const nonEmptyEntries = updatedEntries.filter(entry => entry.trim() !== '');
     handleSaveEntry(today, updatedEntries);
   };
 
@@ -46,7 +46,6 @@ function BulletListInput() {
         updatedEntries.push(''); // Add new empty entry if at last entry
       }
       saveEntry(updatedEntries);
-
       setTimeout(() => {
         inputRefs.current[index + 1]?.focus(); // Move focus to the next item
       }, 0);
@@ -58,7 +57,7 @@ function BulletListInput() {
     if (index > 0) {
       const updatedEntries = entries.filter((_, i) => i !== index); // Remove entry
       saveEntry(updatedEntries);
-  
+
       setTimeout(() => {
         const previousInput = inputRefs.current[index - 1];
         if (previousInput) {
@@ -113,4 +112,4 @@ function BulletListInput() {
   );
 }
 
-export default BulletListInput;
+export default BulletTextArea;

@@ -1,6 +1,6 @@
 @charset "UTF-8";
 html {
-  overflow-y: visible;
+  overflow-y: auto;
   overflow-x: hidden;
 }
 
@@ -64,13 +64,6 @@ ul li:before {
   color: rgb(69.92, 69.92, 82.08);
 }
 
-.entry-header {
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-  margin-bottom: 10px;
-}
-
 .content {
   display: flex;
   flex-direction: column;
@@ -82,6 +75,17 @@ ul li:before {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.dummy-container {
+  height: 100px;
+}
+
+.entry-header {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px;
+  margin-bottom: 10px;
 }
 
 .navbar {
@@ -100,7 +104,7 @@ ul li:before {
   flex-direction: column;
 }
 .navbar .navbar-content .navbar-toggle {
-  padding: 20px 10px;
+  padding: 10px;
   margin-top: auto;
 }
 .navbar .navbar-content .navbar-toggle button {
