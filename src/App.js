@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+
 import JournalEntries from "./pages/Journals";
 import NewEntry from "./pages/NewEntry";
 import Settings from "./pages/Settings";
@@ -15,10 +16,7 @@ function App() {
         </div>
         <div className="col-6">
           <Routes>
-          <Route
-              path="/"
-              element={<NewEntry date={today} />}
-            />
+          <Route path="/" element={<Navigate to="/new-entry" />} />
             <Route path="/journals" element={<JournalEntries />} />
             <Route
               path="/new-entry/:date?"
