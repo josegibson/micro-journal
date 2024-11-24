@@ -23,8 +23,19 @@ export const useBulletEntries = (date, entries, setEntries) => {
   }, [journals, date, setEntries]);
 
   const handleEntryChange = (index, value) => {
-    const updatedEntries = [...entries];
+    let updatedEntries = [...entries];
     updatedEntries[index] = value;
+
+    // Remove the entry if it is emptied and not the last one
+    if (value === '' && index !== entries.length - 1) {
+      updatedEntries = updatedEntries.filter((_, i) => i !== index);
+    }
+
+    // Ensure the last entry is always an empty string
+    if (updatedEntries[updatedEntries.length - 1].trim() !== '') {
+      updatedEntries.push('');
+    }
+
     handleSaveEntry(new Date(date), updatedEntries);
     setEntries(updatedEntries);
   };

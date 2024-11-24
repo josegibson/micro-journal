@@ -26,31 +26,49 @@ function BulletTextArea({ date }) {
     });
   }, [entries]);
 
+  useEffect(() => {
+    // Focus the first textarea by default upon mounting
+    if (inputRefs.current[0]) {
+      const firstTextarea = inputRefs.current[0];
+      firstTextarea.focus();
+      firstTextarea.setSelectionRange(firstTextarea.value.length, firstTextarea.value.length);
+    }
+  }, [inputRefs]);
+
   const handleFocus = (index) => {
+    const filteredEntries = entries.filter((entry, i) => entry !== '' || i === entries.length - 1);
+    const actualIndex = filteredEntries.findIndex((_, i) => i === index);
+
     if (window.innerWidth <= 768) {
       const formattedDate = new Date(date).toISOString().split('T')[0];
-      navigate(`/entry/${formattedDate}/${index}`);
+      navigate(`/entry/${formattedDate}/${actualIndex}`);
     } else {
-      inputRefs.current[index].focus();
+      const textarea = inputRefs.current[index];
+      if (textarea) {
+        textarea.focus();
+        textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+      }
     }
   };
 
   return (
     <div className="bullet-container">
-      {entries.map((entry, index) => (
-        <div key={index} className="bullet-item">
-          <textarea
-            ref={el => inputRefs.current[index] = el}
-            className="text-input"
-            value={entry}
-            onChange={e => handleEntryChange(index, e.target.value)}
-            onKeyDown={e => handleKeyActions(index, e)}
-            onFocus={() => handleFocus(index)}
-            placeholder="New Bullet Point..."
-            rows={1}
-          />
-        </div>
-      ))}
+      {entries
+        .filter((entry, index) => entry !== '' || index === entries.length - 1)
+        .map((entry, index) => (
+          <div key={index} className="bullet-item">
+            <textarea
+              ref={el => inputRefs.current[index] = el}
+              className="text-input"
+              value={entry}
+              onChange={e => handleEntryChange(index, e.target.value)}
+              onKeyDown={e => handleKeyActions(index, e)}
+              onFocus={() => handleFocus(index)}
+              placeholder="New Bullet Point..."
+              rows={1}
+            />
+          </div>
+        ))}
     </div>
   );
 }

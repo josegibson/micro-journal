@@ -209,6 +209,7 @@ textarea::placeholder {
   width: 100%;
   padding: 20px;
   display: flex;
+  flex-direction: column;
 }
 .fullscreen-textarea button {
   align-self: flex-end;

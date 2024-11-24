@@ -34,6 +34,12 @@ function BulletEntryPage() {
     adjustTextareaHeight();
   }, [entry]);
 
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, []);
+
   const adjustTextareaHeight = () => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
@@ -77,7 +83,7 @@ function BulletEntryPage() {
         value={entry}
         onChange={handleChange}
         onKeyDown={handleKeyDown}
-        placeholder="Edit your entry..."
+        placeholder=""
         rows={1}
       />
       <button onClick={handleSave}>Save</button>
