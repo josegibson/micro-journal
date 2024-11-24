@@ -8,8 +8,11 @@ export const useBulletEntries = (formattedDate) => {
 
   useEffect(() => {
     if (formattedDate) {
-      const initialEntries = getEntriesForDate(new Date(formattedDate));
-      setEntries(initialEntries);
+      const loadEntries = async () => {
+        const initialEntries = await getEntriesForDate(new Date(formattedDate));
+        setEntries(initialEntries);
+      };
+      loadEntries();
     }
   }, [formattedDate, getEntriesForDate]);
 
