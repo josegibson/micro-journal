@@ -1,62 +1,86 @@
-import React, { useState, useContext, useEffect, useRef } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import { JournalContext } from "../components/JournalProvider";
-import { FaCheck } from "react-icons/fa";
+import React, { useState, useEffect, useContext, useRef } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { JournalContext } from '../components/JournalProvider';
+
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
 
 function BulletEntryPage() {
   const { date, index } = useParams();
   const navigate = useNavigate();
-  const { journals, handleSaveEntry } = useContext(JournalContext);
-  const [entry, setEntry] = useState(journals[date]?.[index] || "");
+  const { getEntriesForDate, handleSaveEntry } = useContext(JournalContext);
+  const formattedDate = new Date(date).toISOString().split('T')[0];
+  const parsedIndex = parseInt(index, 10);
+  const [entries, setEntries] = useState(() => getEntriesForDate(new Date(date)));
+  const [entry, setEntry] = useState(entries[parsedIndex] || '');
   const textareaRef = useRef(null);
 
-  const handleSave = () => {
-    if (!journals[date]) {
-      journals[date] = [''];
+  useEffect(() => {
+    const journalEntries = getEntriesForDate(new Date(date));
+
+    // Prevent unnecessary state updates
+    if (!arraysEqual(journalEntries, entries)) {
+      setEntries(journalEntries);
+      setEntry(journalEntries[parsedIndex] || '');
     }
-    const updatedEntries = [...journals[date]];
-    updatedEntries[index] = entry;
+  }, [getEntriesForDate, date, parsedIndex, entries]);
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [entry]);
+
+  const adjustTextareaHeight = () => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      const length = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(length, length);
+    }
+  };
+
+  const handleSave = () => {
+    const updatedEntries = [...entries];
+    if (parsedIndex >= 0 && parsedIndex < updatedEntries.length) {
+      updatedEntries[parsedIndex] = entry;
+    } else if (parsedIndex === updatedEntries.length) {
+      updatedEntries.push(entry);
+    }
 
     if (updatedEntries[updatedEntries.length - 1].trim() !== '') {
       updatedEntries.push('');
     }
 
     handleSaveEntry(new Date(date), updatedEntries);
-    console.log("Entry saved:", updatedEntries); // Debugging log
-    navigate(`/${date}`); // Navigate directly to the NewEntry page for the specific date
+    navigate(`/${formattedDate}`);
   };
 
-  const adjustTextareaHeight = () => {
-    const textarea = textareaRef.current;
-    if (textarea) {
-      textarea.style.height = 'auto'; // Reset height
-      textarea.style.height = `${textarea.scrollHeight + 10}px`; // Set to scroll height
-    }
+  const handleChange = (e) => {
+    setEntry(e.target.value);
   };
 
-  useEffect(() => {
-    adjustTextareaHeight(); // Adjust height on initial render
-    if (textareaRef.current) {
-      const length = textareaRef.current.value.length;
-      textareaRef.current.setSelectionRange(length, length); // Set cursor to the end
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSave();
     }
-  }, [entry]);
+  };
 
   return (
     <div className="fullscreen-textarea">
       <textarea
         ref={textareaRef}
         value={entry}
-        onChange={(e) => {
-          setEntry(e.target.value);
-          adjustTextareaHeight(); // Adjust height on change
-        }}
-        autoFocus
-        placeholder="Write your entry here..."
+        onChange={handleChange}
+        onKeyDown={handleKeyDown}
+        placeholder="Edit your entry..."
+        rows={1}
       />
-      <button onClick={handleSave}>
-        <FaCheck fontSize={16} />
-      </button>
+      <button onClick={handleSave}>Save</button>
     </div>
   );
 }

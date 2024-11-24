@@ -21,7 +21,8 @@ function BulletTextArea({ date }) {
 
   const handleFocus = (index) => {
     if (window.innerWidth <= 768) {
-      navigate(`/entry/${date}/${index}`);
+      const formattedDate = new Date(date).toISOString().split('T')[0];
+      navigate(`/entry/${formattedDate}/${index}`);
     } else {
       inputRefs.current[index].focus();
     }

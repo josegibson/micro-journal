@@ -1,6 +1,14 @@
 import { useRef, useContext, useEffect } from "react";
 import { JournalContext } from './JournalProvider';
 
+function arraysEqual(arr1, arr2) {
+  if (arr1.length !== arr2.length) return false;
+  for (let i = 0; i < arr1.length; i++) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
+
 export const useBulletEntries = (date, entries, setEntries) => {
   const { journals, handleSaveEntry } = useContext(JournalContext);
   const inputRefs = useRef([]);
@@ -8,16 +16,17 @@ export const useBulletEntries = (date, entries, setEntries) => {
   useEffect(() => {
     const dateStr = new Date(date).toISOString().split('T')[0];
     const journalEntries = journals[dateStr] || [''];
-    setEntries(journalEntries);
+
+    if (!arraysEqual(journalEntries, entries)) {
+      setEntries(journalEntries);
+    }
   }, [journals, date, setEntries]);
 
   const handleEntryChange = (index, value) => {
-    setEntries((prevEntries) => {
-      const updatedEntries = [...prevEntries];
-      updatedEntries[index] = value;
-      handleSaveEntry(new Date(date), updatedEntries);
-      return updatedEntries;
-    });
+    const updatedEntries = [...entries];
+    updatedEntries[index] = value;
+    handleSaveEntry(new Date(date), updatedEntries);
+    setEntries(updatedEntries);
   };
 
   const focusInput = (index, position = 'end') => {
@@ -41,15 +50,15 @@ export const useBulletEntries = (date, entries, setEntries) => {
         if (index === entries.length - 1) {
           updatedEntries.push('');
         }
-        setEntries(updatedEntries);
         handleSaveEntry(new Date(date), updatedEntries);
+        setEntries(updatedEntries);
         focusInput(index + 1);
       }
     } else if (event.key === "Backspace" && entries[index] === "" && index > 0) {
       event.preventDefault();
       const updatedEntries = entries.filter((_, i) => i !== index);
-      setEntries(updatedEntries);
       handleSaveEntry(new Date(date), updatedEntries);
+      setEntries(updatedEntries);
       focusInput(index - 1);
     }
   };
