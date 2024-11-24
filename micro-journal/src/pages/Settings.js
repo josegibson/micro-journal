@@ -1,8 +1,12 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { JournalContext } from '../components/JournalProvider';
+import { useUser } from '../providers/UserProvider';
 
 function Settings() {
   const { clearAllData, saveAllData, isOnline } = useContext(JournalContext);
+  const { logout } = useUser();
+  const navigate = useNavigate();
   const [message, setMessage] = useState('');
 
   const handleClearData = () => {
@@ -32,6 +36,13 @@ function Settings() {
     setTimeout(() => setMessage(''), 3000);
   };
 
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+      navigate('/login');
+    }
+  };
+
   return (
     <div className="page">
       <h1>Settings</h1>
@@ -50,7 +61,14 @@ function Settings() {
           >
             Clear All Data
           </button>
+          <button
+            onClick={handleLogout}
+            className="btn btn-secondary"
+          >
+            Logout
+          </button>
         </div>
+        {message && <div className="alert alert-info">{message}</div>}
       </div>
     </div>
   );
