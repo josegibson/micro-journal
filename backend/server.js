@@ -6,17 +6,15 @@ const User = require('./models/User');
 const app = express();
 const port = 5000;
 
-// Database sync and initial query should be sequential
 sequelize.sync()
   .then(() => {
     console.log('Database synced');
-    // Move the user query inside the sync promise
-    return User.findAll({
-      attributes: ['id', 'username']
-    });
+    return User.findAll();
   })
   .then(users => {
-    console.log('All users:', users);
+    users.forEach(user => {
+      console.log(`User ID: ${user.id}, Username: ${user.username}`);
+    });
   })
   .catch(err => console.error('Database sync error:', err));
 
