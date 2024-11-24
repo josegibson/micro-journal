@@ -1,30 +1,32 @@
+import React from "react";
 import BulletTextArea from "../components/BulletTextArea";
 import { format, parse, isValid } from "date-fns";
 import { useParams } from "react-router-dom";
 
 function NewEntry() {
-
   const { date } = useParams();
-  let parsedDate = date ? parse(date, "yyyy-MM-dd", new Date()) : new Date();
+  let formattedDate;
 
-  if (!isValid(parsedDate)) {
-    console.warn(`Invalid date format received: "${date}". Falling back to current date.`);
-    parsedDate = new Date();
+  if (date) {
+    const parsedDate = parse(date, "yyyy-MM-dd", new Date());
+    if (isValid(parsedDate)) {
+      formattedDate = format(parsedDate, "yyyy-MM-dd");
+    } else {
+      console.warn(`Invalid date format received: "${date}". Falling back to current date.`);
+      formattedDate = format(new Date(), "yyyy-MM-dd");
+    }
+  } else {
+    formattedDate = format(new Date(), "yyyy-MM-dd");
   }
-
-  console.log("Parsed Date:", parsedDate);
 
   return (
     <div className="page entry">
       <div className="heading">
-        <label>{format(parsedDate, "dd MMM")}</label>
-        <h1>{format(parsedDate, "EEEE")}</h1>
+        <label>{format(new Date(formattedDate), "dd MMM")}</label>
+        <h1>{format(new Date(formattedDate), "EEEE")}</h1>
       </div>
       <br />
-      <BulletTextArea date={parsedDate} />
-      <br />
-      <br />
-      <br />
+      <BulletTextArea date={formattedDate} />
       <br />
       <br />
     </div>

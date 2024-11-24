@@ -6,24 +6,37 @@ const actionTypes = {
   SAVE_ENTRY: 'SAVE_ENTRY',
 };
 
+const loadFromLocalStorage = () => {
+  try {
+    const savedJournals = localStorage.getItem('journals');
+    return savedJournals ? JSON.parse(savedJournals) : {};
+  } catch (error) {
+    console.error('Error loading from localStorage:', error);
+    return {};
+  }
+};
+
 const journalReducer = (state, action) => {
   switch (action.type) {
     case actionTypes.SAVE_ENTRY:
       const { date, entries } = action.payload;
-      return {
+      const newState = {
         ...state,
         journals: {
           ...state.journals,
           [date]: entries,
         },
       };
+      // Save to localStorage
+      localStorage.setItem('journals', JSON.stringify(newState.journals));
+      return newState;
     default:
       return state;
   }
 };
 
 const initialState = {
-  journals: {},
+  journals: loadFromLocalStorage(),
 };
 
 const JournalProvider = ({ children }) => {
@@ -31,14 +44,10 @@ const JournalProvider = ({ children }) => {
 
   const handleSaveEntry = (date, newEntries) => {
     const formattedDate = date.toISOString().split('T')[0];
-    const existingEntries = state.journals[formattedDate] || [{ key: Date.now(), value: '' }];
-
-    if (JSON.stringify(existingEntries) !== JSON.stringify(newEntries)) {
-      dispatch({
-        type: actionTypes.SAVE_ENTRY,
-        payload: { date: formattedDate, entries: newEntries },
-      });
-    }
+    dispatch({
+      type: actionTypes.SAVE_ENTRY,
+      payload: { date: formattedDate, entries: newEntries },
+    });
   };
 
   const getEntriesForDate = (date) => {

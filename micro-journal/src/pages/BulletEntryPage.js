@@ -1,71 +1,34 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { JournalContext } from '../components/JournalProvider';
-
-function arraysEqual(arr1, arr2) {
-  if (arr1.length !== arr2.length) return false;
-  for (let i = 0; i < arr1.length; i++) {
-    if (arr1[i].value !== arr2[i].value) return false;
-  }
-  return true;
-}
+import { useBulletEntries } from '../components/useBulletEntries';
 
 function BulletEntryPage() {
   const { date, index } = useParams();
   const navigate = useNavigate();
-  const { getEntriesForDate, handleSaveEntry } = useContext(JournalContext);
-  const formattedDate = new Date(date).toISOString().split('T')[0];
   const parsedIndex = parseInt(index, 10);
-  const [entries, setEntries] = useState(() => getEntriesForDate(new Date(date)));
-  const [entry, setEntry] = useState(entries[parsedIndex]?.value || '');
   const textareaRef = useRef(null);
+  
+  const { 
+    entries, 
+    handleEntryChange, 
+    handleKeyActions 
+  } = useBulletEntries(date);
 
-  useEffect(() => {
-    const journalEntries = getEntriesForDate(new Date(date));
-
-    if (!arraysEqual(journalEntries, entries)) {
-      setEntries(journalEntries);
-      setEntry(journalEntries[parsedIndex]?.value || '');
-    }
-  }, [getEntriesForDate, date, parsedIndex, entries]);
-
-  useEffect(() => {
-    adjustTextareaHeight();
-  }, [entry]);
+  const currentEntry = entries[parsedIndex] || { key: Date.now(), value: '' };
 
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.focus();
-    }
-  }, []);
-
-  const adjustTextareaHeight = () => {
-    if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
       textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
-      const length = textareaRef.current.value.length;
-      textareaRef.current.setSelectionRange(length, length);
     }
-  };
+  }, [currentEntry.value]);
 
   const handleSave = () => {
-    const updatedEntries = [...entries];
-    if (parsedIndex >= 0 && parsedIndex < updatedEntries.length) {
-      updatedEntries[parsedIndex] = { ...updatedEntries[parsedIndex], value: entry };
-    } else if (parsedIndex === updatedEntries.length) {
-      updatedEntries.push({ key: Date.now(), value: entry });
-    }
 
-    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
-      updatedEntries.push({ key: Date.now(), value: '' });
-    }
+    handleKeyActions(currentEntry.key, { key: 'Enter', preventDefault: () => {} });
 
-    handleSaveEntry(new Date(date), updatedEntries);
     navigate(-1);
-  };
-
-  const handleChange = (e) => {
-    setEntry(e.target.value);
   };
 
   const handleKeyDown = (e) => {
@@ -79,10 +42,10 @@ function BulletEntryPage() {
     <div className="fullscreen-textarea">
       <textarea
         ref={textareaRef}
-        value={entry}
-        onChange={handleChange}
+        value={currentEntry.value}
+        onChange={e => handleEntryChange(currentEntry.key, e.target.value)}
         onKeyDown={handleKeyDown}
-        placeholder=""
+        placeholder="New Bullet Point..."
         rows={1}
       />
       <button onClick={handleSave}>Save</button>

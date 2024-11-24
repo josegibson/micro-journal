@@ -19,6 +19,7 @@ function App() {
         <div className="page-container">
           <Routes>
             <Route path="/" element={<NewEntry />} />
+            <Route path="/new-entry" element={<NewEntry />} />
             <Route path="/journals" element={<JournalEntries />} />
             <Route path="/:date" element={<NewEntry />} />
             <Route path="/settings" element={<Settings />} />
