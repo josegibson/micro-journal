@@ -9,12 +9,12 @@ const JournalEntries = () => {
 
   const handleCardClick = (date) => {
     const formattedDate = format(new Date(date), "yyyy-MM-dd"); // Ensure correct format
-    navigate(`/new-entry/${formattedDate}`);
+    navigate(`/${formattedDate}`);
   };
-  
+
 
   return (
-    <div className="text-center">
+    <div className="page">
       <h1>Journal</h1>
       {Object.keys(journals).length === 0 ? (
         <p>No journal entries available.</p>
@@ -26,9 +26,8 @@ const JournalEntries = () => {
             onClick={() => handleCardClick(date)}
             style={{ cursor: "pointer" }}
           >
-            <div className="entry-header">
-              <h3>{format(new Date(date), "EEE, dd MMM")}</h3>
-            </div>
+
+            <h5 className="">{format(new Date(date), "EEE, dd MMM")}</h5>
             <ul>
               {journals[date].map((entry, index) => {
                 const trimmedEntry = entry.trim();

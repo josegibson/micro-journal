@@ -1,32 +1,8 @@
 @charset "UTF-8";
-html {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
 body {
   background-color: #17171b;
   color: #ffffff;
-  height: 100vh;
-}
-
-h1 {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 2.5rem;
-}
-
-h3 {
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 1.7rem;
-}
-
-h4 {
-  color: #ffffff;
-  font-size: 1.2rem;
-  line-height: 0;
-  font-weight: 700;
 }
 
 textarea {
@@ -64,106 +40,120 @@ ul li:before {
   color: rgb(69.92, 69.92, 82.08);
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  height: 100vh;
+body {
+  font-family: "Playfair Display", serif;
 }
 
-.center-active {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.dummy-container {
-  height: 100px;
-}
-
-.entry-header {
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-  margin-bottom: 10px;
-}
-
-.navbar {
-  background-color: transparent;
-  color: rgb(116.84, 116.84, 137.16);
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  height: 100vh;
+.page-container {
   width: 100%;
+  height: 100vh;
+  padding: 20px;
 }
-.navbar .navbar-content {
-  padding: 10px;
+@media (min-width: 769px) {
+  .page-container {
+    width: 70%;
+    justify-items: center;
+  }
+}
+
+.page {
+  width: 70%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.page h1 {
+  padding-top: 100px;
+}
+.page.entry {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-.navbar .navbar-content .navbar-toggle {
-  padding: 10px;
-  margin-top: auto;
-}
-.navbar .navbar-content .navbar-toggle button {
-  background: none;
-  border: none;
-  color: inherit;
-  cursor: pointer;
-}
-
-.card {
-  background-color: #17171b;
-  border-style: none;
-  border-radius: 20px;
-  padding: 25px 20px;
-  text-align: start;
-  display: flex;
-  flex-direction: column;
   justify-content: center;
-  transition: all 0.1s ease-in-out;
 }
-.card:hover {
-  background-color: rgb(46.46, 46.46, 54.54);
+.page.entry h1 {
+  padding-top: 0;
 }
 
-.navbar-item {
-  margin: 5px;
+.navbar {
+  display: flex;
+  margin: 20px;
 }
-.navbar-item a {
-  background: none;
-  border: none;
+.navbar .navbar-item {
   display: flex;
   align-items: center;
+  padding: 10px 20px;
+  border-radius: 24px;
+  margin: 5px;
+  transition: background-color 0.3s ease;
+}
+.navbar .navbar-item:hover {
+  background-color: rgb(76.5, 76.5, 76.5);
+}
+.navbar .navbar-item .navbar-link {
   color: inherit;
   text-decoration: none;
 }
-.navbar-item a span {
+.navbar .navbar-item .navbar-link span {
   margin-left: 10px;
   font-size: 14px;
 }
-.navbar-item .icon-box {
-  padding: 10px;
-  border-radius: 50%;
-  background-color: none;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+
+@media (max-width: 768px) {
+  .navbar {
+    flex-direction: row;
+    justify-content: space-evenly;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    margin: 0px;
+    width: 100%;
+    border-top: 1px solid rgb(76.5, 76.5, 76.5);
+  }
+  .navbar .navbar-item {
+    margin: 0px;
+    color: rgb(127.5, 127.5, 127.5);
+  }
+  .navbar .navbar-item.active {
+    background-color: transparent;
+    color: #ffffff;
+  }
+  .navbar span {
+    display: none;
+  }
 }
-.navbar-item.active a {
-  font-weight: bold;
-  color: rgb(199.38, 199.38, 207.62);
+@media (min-width: 769px) {
+  .navbar {
+    flex-direction: column;
+    position: static;
+    justify-content: flex-start;
+    margin: 20px;
+    width: 12%;
+  }
+  .navbar .navbar-item {
+    margin: 5px;
+  }
+  .navbar .navbar-item.active {
+    font-weight: bold;
+    background-color: rgb(76.5, 76.5, 76.5);
+  }
+  .navbar span {
+    display: inline;
+  }
 }
-.navbar-item.expanded .icon-box {
-  background-color: rgb(69.92, 69.92, 82.08);
+.card {
+  border-radius: 20px;
+  padding: 25px 20px;
+  background-color: inherit;
+  transition: all 0.1s ease-in-out;
+  color: #ffffff;
 }
-.navbar-item:hover span {
-  color: rgb(199.38, 199.38, 207.62);
+.card h5 {
+  padding-left: 20px;
+  font-weight: 900;
 }
-.navbar-item:hover .icon-box {
-  background-color: rgb(69.92, 69.92, 82.08);
+.card:hover {
+  background-color: rgb(46.46, 46.46, 54.54);
 }
 
 /*# sourceMappingURL=index.css.map */

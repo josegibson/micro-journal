@@ -1,18 +1,19 @@
 @import '../base/_variables.scss';
 
 .card{
-    background-color: $bg-color;
-    border-style: none;
     border-radius: 20px;
     padding: 25px 20px;
-    text-align: start;
+    background-color: inherit;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
     transition: all 0.1s ease-in-out;
+    color: $primary-color;
+
+    h5{
+        padding-left: 20px;
+        font-weight: 900;
+    }
 
     &:hover{
-        background-color: lighten($color: $bg-color, $amount: 10%);
+        background-color: lighten($bg-color, 10%);
     }
 }

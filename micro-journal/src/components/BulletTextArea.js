@@ -85,13 +85,6 @@ function BulletTextArea() {
     });
   }, []);
 
-  // Focus the last empty entry when updated
-  useEffect(() => {
-    if (entries.length && entries[entries.length - 1] === "") {
-      inputRefs.current[entries.length - 1]?.focus();
-    }
-  }, [entries]);
-
   return (
     <ul>
       {entries.map((entry, index) => (

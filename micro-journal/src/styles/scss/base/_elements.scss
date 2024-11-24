@@ -1,35 +1,11 @@
 @import "./_variables";
 
-html {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
 
 body {
   background-color: $bg-color;
   color: $primary-color;
-  height: 100vh;
-  // font-family: 
 }
 
-h1 {
-  color: $primary-color;
-  font-weight: 700;
-  font-size: 2.5rem;
-}
-
-h3{
-  color: $primary-color;
-  font-weight: 700;
-  font-size: 1.7rem;
-}
-
-h4 {
-  color: $primary-color;
-  font-size: 1.2rem;
-  line-height: 0;
-  font-weight: 700;
-}
 
 textarea {
   border-radius: 5px;

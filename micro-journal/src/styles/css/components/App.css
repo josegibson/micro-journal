@@ -1,25 +1,36 @@
-.content {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  height: 100vh;
+body {
+  font-family: "Playfair Display", serif;
 }
 
-.center-active {
+.page-container {
+  width: 100%;
+  height: 100vh;
+  padding: 20px;
+}
+@media (min-width: 769px) {
+  .page-container {
+    width: 70%;
+    justify-items: center;
+  }
+}
+
+.page {
+  width: 70%;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+}
+.page h1 {
+  padding-top: 100px;
+}
+.page.entry {
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
-
-.dummy-container {
-  height: 100px;
-}
-
-.entry-header {
-  display: flex;
-  flex-direction: column;
-  margin-left: 20px;
-  margin-bottom: 10px;
+.page.entry h1 {
+  padding-top: 0;
 }
 
 /*# sourceMappingURL=App.css.map */
