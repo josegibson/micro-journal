@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useBulletEntries } from '../components/useBulletEntries';
+import { useBulletEntries } from '../hooks/useBulletEntries';
 
 function BulletEntryPage() {
   const { date, index } = useParams();

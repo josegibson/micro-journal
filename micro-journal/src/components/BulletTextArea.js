@@ -1,7 +1,7 @@
 // src/components/BulletTextArea.js
 import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import { useBulletEntries } from './useBulletEntries';
+import { useBulletEntries } from '../hooks/useBulletEntries';
 
 function BulletTextArea({ date }) {
   const navigate = useNavigate();
