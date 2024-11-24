@@ -4,7 +4,6 @@ const JournalContext = createContext();
 
 const actionTypes = {
   SAVE_ENTRY: 'SAVE_ENTRY',
-  TOGGLE_THEME: 'TOGGLE_THEME',
 };
 
 const journalReducer = (state, action) => {
@@ -18,11 +17,6 @@ const journalReducer = (state, action) => {
           [date]: entries,
         },
       };
-    case actionTypes.TOGGLE_THEME:
-      return {
-        ...state,
-        theme: state.theme === 'light' ? 'dark' : 'light',
-      };
     default:
       return state;
   }
@@ -30,7 +24,6 @@ const journalReducer = (state, action) => {
 
 const initialState = {
   journals: {},
-  theme: 'light',
 };
 
 const JournalProvider = ({ children }) => {
@@ -48,10 +41,6 @@ const JournalProvider = ({ children }) => {
     }
   };
 
-  const toggleTheme = () => {
-    dispatch({ type: actionTypes.TOGGLE_THEME });
-  };
-
   const getEntriesForDate = (date) => {
     const formattedDate = date.toISOString().split('T')[0];
     return state.journals[formattedDate] || [''];
@@ -63,8 +52,6 @@ const JournalProvider = ({ children }) => {
         journals: state.journals,
         handleSaveEntry,
         getEntriesForDate,
-        theme: state.theme,
-        toggleTheme,
       }}
     >
       {children}
