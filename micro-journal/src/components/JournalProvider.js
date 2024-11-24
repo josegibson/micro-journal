@@ -1,36 +1,28 @@
-import React, { createContext, useEffect, useState } from 'react';
-
+import React, { createContext, useState, useEffect } from 'react';
 
 const JournalContext = createContext();
 
 const JournalProvider = ({ children }) => {
-  const [journals, setJournals] = useState({});  // Renamed to journals
+  const [journals, setJournals] = useState({});
 
   const handleSaveEntry = (date, newEntries) => {
     const formattedDate = date.toISOString().split('T')[0];
-    setJournals((prevJournals) => ({
-      ...prevJournals,
-      [formattedDate]: newEntries,
-    }));
+    setJournals((prevJournals) => {
+      const updatedJournals = {
+        ...prevJournals,
+        [formattedDate]: newEntries,
+      };
+      console.log('Updated Journals:', updatedJournals);
+      return updatedJournals;
+    });
   };
 
-const fetchJournalByDate = (date) => {
-    const formattedDate = date.toISOString().split('T')[0];
-    if (!journals[formattedDate]) {
-        setJournals((prevJournals) => ({
-            ...prevJournals,
-            [formattedDate]: [],
-        }));
-    }
-    return journals[formattedDate] || [];
-};
-
-    useEffect(() => {
-        console.log('Journals updated:', journals);
-    }, [journals]);
+  useEffect(() => {
+    console.log('Journals updated:', journals);
+  }, [journals]);
 
   return (
-    <JournalContext.Provider value={{ journals, handleSaveEntry, fetchJournalByDate }}>
+    <JournalContext.Provider value={{ journals, handleSaveEntry }}>
       {children}
     </JournalContext.Provider>
   );

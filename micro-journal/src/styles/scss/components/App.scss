@@ -1,6 +1,17 @@
+@import '../base/variables';
+
 body{
     font-family: 'Playfair Display', serif;
 }
+
+ul {
+    li::marker {
+        color: darken($primary-color, 60%);
+    }
+}
+
+
+
 
 .page-container{
     width: 100%;
@@ -14,13 +25,17 @@ body{
 }
 
 .page{
-    width: 70%;
+
+    @media (min-width: 769px) {
+        width: 70%;
+    }
+
     text-align: left;
     display: flex;
     flex-direction: column;
 
-    h1{
-        padding-top: 100px;
+    .heading{
+        padding-left: 20px;
     }
 
     &.entry{
@@ -28,9 +43,5 @@ body{
         display: flex;
         flex-direction: column;
         justify-content: center;
-
-        h1{
-            padding-top: 0;
-        }
     }
 }

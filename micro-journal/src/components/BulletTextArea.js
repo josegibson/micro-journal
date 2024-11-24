@@ -1,107 +1,114 @@
 // src/components/BulletTextArea.js
 import React, { useRef, useEffect, useContext } from "react";
 import { JournalContext } from './JournalProvider';
+import { useNavigate } from 'react-router-dom';
 
-// Helper to handle text area height adjustment
-const adjustHeight = (textarea) => {
-  textarea.style.height = 'auto'; // Reset height
-  textarea.style.height = `${textarea.scrollHeight}px`; // Set height to scroll height
+
+// Split handlers into custom hook for better organization
+const useBulletEntries = (initialEntries, onSave) => {
+  const inputRefs = useRef([]);
+  
+  const focusInput = (index, position = 'end') => {
+    setTimeout(() => {
+      const input = inputRefs.current[index];
+      if (input) {
+        input.focus();
+        if (position === 'end') {
+          input.setSelectionRange(input.value.length, input.value.length);
+        }
+      }
+    }, 0);
+  };
+
+  const handleEntryChange = (index, value) => {
+    const updatedEntries = [...initialEntries];
+    updatedEntries[index] = value;
+    onSave(updatedEntries);
+  };
+
+  const handleKeyActions = (index, event) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      if (initialEntries[index].trim()) {
+        const updatedEntries = [...initialEntries];
+        updatedEntries[index] = initialEntries[index].trim();
+        if (index === initialEntries.length - 1) {
+          updatedEntries.push('');
+        }
+        onSave(updatedEntries);
+        focusInput(index + 1);
+      }
+    } else if (event.key === "Backspace" && initialEntries[index] === "" && index > 0) {
+      event.preventDefault();
+      const updatedEntries = initialEntries.filter((_, i) => i !== index);
+      onSave(updatedEntries);
+      focusInput(index - 1);
+    }
+  };
+
+  return {
+    inputRefs,
+    handleEntryChange,
+    handleKeyActions,
+  };
 };
 
 function BulletTextArea() {
+  const navigate = useNavigate();
   const { journals, handleSaveEntry } = useContext(JournalContext);
   const today = new Date();
   const formattedToday = today.toISOString().split('T')[0];
-
-  // Use inputRefs to manage the focus on the text areas dynamically
-  const inputRefs = useRef([]);
-
-  // Retrieve today's journal or initialize with an empty entry
   const entries = journals[formattedToday] || [''];
 
-  // Save entries to context when modified, excluding empty entries
-  const saveEntry = (updatedEntries) => {
-    handleSaveEntry(today, updatedEntries);
-  };
+  const { inputRefs, handleEntryChange, handleKeyActions } = useBulletEntries(
+    entries,
+    (updatedEntries) => handleSaveEntry(today, updatedEntries)
+  );
 
-  // Handle saving and focusing after pressing Enter
-  const handleKeyDown = (index, event) => {
-    const { key } = event;
-    if (key === "Enter") {
-      event.preventDefault();
-      // Save entry and add a new empty entry if needed
-      handleSaveEntryOnEnter(index);
-    } else if (key === "Backspace" && entries[index] === "") {
-      event.preventDefault();
-      handleRemoveEntry(index);
-    }
-  };
-
-  // Save entry and add a new bullet point
-  const handleSaveEntryOnEnter = (index) => {
-    if (entries[index].trim()) {
-      const updatedEntries = [...entries];
-      updatedEntries[index] = entries[index].trim(); // Strip whitespace before saving
-      if (index === entries.length - 1) {
-        updatedEntries.push(''); // Add new empty entry if at last entry
-      }
-      saveEntry(updatedEntries);
-      setTimeout(() => {
-        inputRefs.current[index + 1]?.focus(); // Move focus to the next item
-      }, 0);
-    }
-  };
-
-  // Handle removing empty entry on Backspace
-  const handleRemoveEntry = (index) => {
-    if (index > 0) {
-      const updatedEntries = entries.filter((_, i) => i !== index); // Remove entry
-      saveEntry(updatedEntries);
-
-      setTimeout(() => {
-        const previousInput = inputRefs.current[index - 1];
-        if (previousInput) {
-          previousInput.focus(); // Focus previous item
-          previousInput.setSelectionRange(previousInput.value.length, previousInput.value.length); // Set cursor to end
-        }
-      }, 0);
-    }
-  };
-
-  // Handle change in text area input
-  const handleChange = (index, event) => {
-    const updatedEntries = [...entries];
-    updatedEntries[index] = event.target.value;
-    saveEntry(updatedEntries);
-    adjustHeight(event.target);
-  };
-
+  // Auto-adjust height effect
   useEffect(() => {
-    // Adjust height for all textareas on mount
-    inputRefs.current.forEach((textarea) => {
+    inputRefs.current.forEach(textarea => {
       if (textarea) {
-        adjustHeight(textarea);
+        textarea.style.height = 'auto';
+        textarea.style.height = `${textarea.scrollHeight}px`;
       }
     });
-  }, []);
+  }, [entries]); // Only re-run when entries change
+
+  const handleFocus = (index) => {
+    if (window.innerWidth <= 768) { // Only navigate on mobile devices
+      navigate(`/entry/${formattedToday}/${index}`);
+    } else {
+      inputRefs.current[index].focus(); // Focus the textarea directly on desktops
+    }
+  };
+
+  const handleBlur = (index) => {
+    // Check if the last entry is not empty and add a new empty entry
+    if (index === entries.length - 1 && entries[index].trim() !== '') {
+      const updatedEntries = [...entries, ''];
+      handleSaveEntry(today, updatedEntries);
+    }
+  };
 
   return (
-    <ul>
+    <div className="bullet-container">
       {entries.map((entry, index) => (
-        <li key={index}>
+        <div key={index} className="bullet-item">
           <textarea
-            ref={(el) => (inputRefs.current[index] = el)}
+            ref={el => inputRefs.current[index] = el}
             className="text-input"
             value={entry}
-            onChange={(e) => handleChange(index, e)}
-            onBlur={() => handleSaveEntryOnEnter(index)}
-            onKeyDown={(e) => handleKeyDown(index, e)}
+            onChange={e => handleEntryChange(index, e.target.value)}
+            onKeyDown={e => handleKeyActions(index, e)}
+            onFocus={() => handleFocus(index)}
+            onBlur={() => handleBlur(index)}
             placeholder="New Bullet Point..."
             rows={1}
           />
-        </li>
+        </div>
       ))}
-    </ul>
+    </div>
   );
 }
 

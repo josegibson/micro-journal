@@ -15,7 +15,7 @@ const JournalEntries = () => {
 
   return (
     <div className="page">
-      <h1>Journal</h1>
+      <h1 className="heading">Journal</h1>
       {Object.keys(journals).length === 0 ? (
         <p>No journal entries available.</p>
       ) : (
@@ -27,7 +27,7 @@ const JournalEntries = () => {
             style={{ cursor: "pointer" }}
           >
 
-            <h5 className="">{format(new Date(date), "EEE, dd MMM")}</h5>
+            <h5>{format(new Date(date), "EEE, dd MMM")}</h5>
             <ul>
               {journals[date].map((entry, index) => {
                 const trimmedEntry = entry.trim();

@@ -1,0 +1,62 @@
+textarea {
+    
+    border-radius: 5px;
+    border-style: none;
+    background-color: transparent;
+    width: 70%;
+    resize: none;
+    color: $primary-color;
+    padding: 0px;
+  
+    &:focus {
+      outline: none;
+    }
+  
+    &::placeholder {
+      color: lighten($color: $bg-color, $amount: 20%);
+      font-style: italic;
+    }
+  }
+
+.bullet-container {
+    padding: 0; // Remove default padding
+    margin: 0; // Remove default margin
+    color: $primary-color; // Set text color
+}
+
+.bullet-item {
+    display: flex; // Use flexbox for alignment
+    align-items: flex-start; // Align items to the start
+    margin-bottom: 5px; // Add space between bullet points
+
+    &:before {
+        content: "•"; // Add bullet point
+        margin-right: 10px; // Space between bullet and text
+        font-size: 1.5rem; // Adjust bullet size if needed
+        line-height: 0.8; // Align bullet with the first line of text
+        color: lighten($color: $bg-color, $amount: 20%); // Set bullet color
+    }
+}
+
+.fullscreen-textarea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 20px;
+    display: flex;
+
+    button {
+        align-self: flex-end; // Align button to the right
+        background: none;
+        border: none;
+        color: darken($primary-color, 60%); // Darken the primary color
+        margin-top: 10px; // Add margin to separate from textarea
+        cursor: pointer;
+    }
+
+    textarea {
+        width: 100%;       
+    }
+}
+  

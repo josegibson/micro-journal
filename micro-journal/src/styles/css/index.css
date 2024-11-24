@@ -5,43 +5,12 @@ body {
   color: #ffffff;
 }
 
-textarea {
-  border-radius: 5px;
-  border-style: none;
-  background-color: transparent;
-  width: 70%;
-  resize: none;
-  color: #ffffff;
-  padding: 0px;
-}
-textarea:focus {
-  outline: none;
-}
-textarea::placeholder {
-  color: rgb(69.92, 69.92, 82.08);
-  font-style: italic;
-}
-
-ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  color: #ffffff;
-}
-ul li {
-  display: flex;
-  align-items: flex-start;
-}
-ul li:before {
-  content: "•";
-  margin-right: 10px;
-  font-size: 1.7rem;
-  line-height: 1;
-  color: rgb(69.92, 69.92, 82.08);
-}
-
 body {
   font-family: "Playfair Display", serif;
+}
+
+ul li::marker {
+  color: #666666;
 }
 
 .page-container {
@@ -57,22 +26,23 @@ body {
 }
 
 .page {
-  width: 70%;
   text-align: left;
   display: flex;
   flex-direction: column;
 }
-.page h1 {
-  padding-top: 100px;
+@media (min-width: 769px) {
+  .page {
+    width: 70%;
+  }
+}
+.page .heading {
+  padding-left: 20px;
 }
 .page.entry {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-.page.entry h1 {
-  padding-top: 0;
 }
 
 .navbar {
@@ -142,18 +112,79 @@ body {
   }
 }
 .card {
-  border-radius: 20px;
-  padding: 25px 20px;
+  border-radius: 15px;
   background-color: inherit;
   transition: all 0.1s ease-in-out;
   color: #ffffff;
+  padding: 25px 0px;
 }
 .card h5 {
-  padding-left: 20px;
+  color: #666666;
   font-weight: 900;
+  padding-left: 30px;
 }
-.card:hover {
-  background-color: rgb(46.46, 46.46, 54.54);
+@media (min-width: 769px) {
+  .card:hover {
+    background-color: rgb(34.73, 34.73, 40.77);
+  }
+  .card h5 {
+    padding-left: 35px;
+  }
+}
+textarea {
+  border-radius: 5px;
+  border-style: none;
+  background-color: transparent;
+  width: 70%;
+  resize: none;
+  color: #ffffff;
+  padding: 0px;
+}
+textarea:focus {
+  outline: none;
+}
+textarea::placeholder {
+  color: rgb(69.92, 69.92, 82.08);
+  font-style: italic;
+}
+
+.bullet-container {
+  padding: 0;
+  margin: 0;
+  color: #ffffff;
+}
+
+.bullet-item {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 5px;
+}
+.bullet-item:before {
+  content: "•";
+  margin-right: 10px;
+  font-size: 1.5rem;
+  line-height: 0.8;
+  color: rgb(69.92, 69.92, 82.08);
+}
+
+.fullscreen-textarea {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+}
+.fullscreen-textarea button {
+  align-self: flex-end;
+  background: none;
+  border: none;
+  color: #666666;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.fullscreen-textarea textarea {
+  width: 100%;
 }
 
 /*# sourceMappingURL=index.css.map */

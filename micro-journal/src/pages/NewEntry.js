@@ -16,8 +16,10 @@ function NewEntry() {
 
   return (
     <div className="page entry">
-      <h4>{format(parsedDate, "dd MMM")}</h4>
-      <h1>{format(parsedDate, "EEEE")}</h1>
+      <div className="heading">
+        <label>{format(parsedDate, "dd MMM")}</label>
+        <h1>{format(parsedDate, "EEEE")}</h1>
+      </div>
       <br />
       <BulletTextArea date={parsedDate} />
       <br />
