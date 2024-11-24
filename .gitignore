@@ -1,1 +1,4 @@
 micro-journal/node_modules
+micro-journal/.env
+backend/node_modules
+backend/.env

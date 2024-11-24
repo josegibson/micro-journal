@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 import JournalEntries from "./pages/Journals";
@@ -7,6 +8,10 @@ import Navbar from "./components/Navbar";
 import BulletEntryPage from "./pages/BulletEntryPage";
 
 function App() {
+  useEffect(() => {
+    document.body.className = 'dark-mode';
+  }, []);
+
   return (
     <Router>
       <div className="d-flex flex-row">

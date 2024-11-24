@@ -1,11 +1,10 @@
 textarea {
-    
     border-radius: 5px;
     border-style: none;
     background-color: transparent;
     width: 70%;
     resize: none;
-    color: $primary-color;
+    color: $primary-color-light;
     padding: 0px;
   
     &:focus {
@@ -13,7 +12,7 @@ textarea {
     }
   
     &::placeholder {
-      color: lighten($color: $bg-color, $amount: 20%);
+      color: lighten($bg-color-light, 20%);
       font-style: italic;
     }
   }
@@ -21,7 +20,7 @@ textarea {
 .bullet-container {
     padding: 0; // Remove default padding
     margin: 0; // Remove default margin
-    color: $primary-color; // Set text color
+    color: $primary-color-light; // Use SCSS variable
 }
 
 .bullet-item {
@@ -34,7 +33,7 @@ textarea {
         margin-right: 10px; // Space between bullet and text
         font-size: 1.5rem; // Adjust bullet size if needed
         line-height: 0.8; // Align bullet with the first line of text
-        color: lighten($color: $bg-color, $amount: 20%); // Set bullet color
+        color: lighten($bg-color-light, 20%); // Use SCSS variable
     }
 }
 
@@ -50,7 +49,7 @@ textarea {
         align-self: flex-end; // Align button to the right
         background: none;
         border: none;
-        color: darken($primary-color, 60%); // Darken the primary color
+        color: darken($primary-color-light, 60%); // Use SCSS variable
         margin-top: 10px; // Add margin to separate from textarea
         cursor: pointer;
     }

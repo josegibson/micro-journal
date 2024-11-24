@@ -36,6 +36,10 @@ function BulletEntryPage() {
 
   useEffect(() => {
     adjustTextareaHeight(); // Adjust height on initial render
+    if (textareaRef.current) {
+      const length = textareaRef.current.value.length;
+      textareaRef.current.setSelectionRange(length, length); // Set cursor to the end
+    }
   }, [entry]);
 
   return (

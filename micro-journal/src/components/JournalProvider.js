@@ -4,25 +4,27 @@ const JournalContext = createContext();
 
 const JournalProvider = ({ children }) => {
   const [journals, setJournals] = useState({});
+  const [theme, setTheme] = useState('light');
 
   const handleSaveEntry = (date, newEntries) => {
     const formattedDate = date.toISOString().split('T')[0];
-    setJournals((prevJournals) => {
-      const updatedJournals = {
-        ...prevJournals,
-        [formattedDate]: newEntries,
-      };
-      console.log('Updated Journals:', updatedJournals);
-      return updatedJournals;
-    });
+    setJournals((prevJournals) => ({
+      ...prevJournals,
+      [formattedDate]: newEntries,
+    }));
   };
 
-  useEffect(() => {
-    console.log('Journals updated:', journals);
-  }, [journals]);
+  const getEntriesForDate = (date) => {
+    const formattedDate = date.toISOString().split('T')[0];
+    return journals[formattedDate] || [''];
+  };
+
+  const toggleTheme = () => {
+    setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
+  };
 
   return (
-    <JournalContext.Provider value={{ journals, handleSaveEntry }}>
+    <JournalContext.Provider value={{ journals, handleSaveEntry, getEntriesForDate, theme, toggleTheme }}>
       {children}
     </JournalContext.Provider>
   );

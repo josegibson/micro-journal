@@ -1,4 +1,4 @@
-@import '../base/variables';
+@import '../base/_variables';
 
 body{
     font-family: 'Playfair Display', serif;
@@ -6,7 +6,7 @@ body{
 
 ul {
     li::marker {
-        color: darken($primary-color, 60%);
+        color: darken($primary-color-light, 60%);
     }
 }
 

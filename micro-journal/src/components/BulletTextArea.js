@@ -1,71 +1,15 @@
 // src/components/BulletTextArea.js
-import React, { useRef, useEffect, useContext } from "react";
-import { JournalContext } from './JournalProvider';
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from 'react-router-dom';
+import { useBulletEntries } from './useBulletEntries';
+import { JournalContext } from './JournalProvider';
 
-
-// Split handlers into custom hook for better organization
-const useBulletEntries = (initialEntries, onSave) => {
-  const inputRefs = useRef([]);
-  
-  const focusInput = (index, position = 'end') => {
-    setTimeout(() => {
-      const input = inputRefs.current[index];
-      if (input) {
-        input.focus();
-        if (position === 'end') {
-          input.setSelectionRange(input.value.length, input.value.length);
-        }
-      }
-    }, 0);
-  };
-
-  const handleEntryChange = (index, value) => {
-    const updatedEntries = [...initialEntries];
-    updatedEntries[index] = value;
-    onSave(updatedEntries);
-  };
-
-  const handleKeyActions = (index, event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      if (initialEntries[index].trim()) {
-        const updatedEntries = [...initialEntries];
-        updatedEntries[index] = initialEntries[index].trim();
-        if (index === initialEntries.length - 1) {
-          updatedEntries.push('');
-        }
-        onSave(updatedEntries);
-        focusInput(index + 1);
-      }
-    } else if (event.key === "Backspace" && initialEntries[index] === "" && index > 0) {
-      event.preventDefault();
-      const updatedEntries = initialEntries.filter((_, i) => i !== index);
-      onSave(updatedEntries);
-      focusInput(index - 1);
-    }
-  };
-
-  return {
-    inputRefs,
-    handleEntryChange,
-    handleKeyActions,
-  };
-};
-
-function BulletTextArea() {
+function BulletTextArea({ date }) {
   const navigate = useNavigate();
-  const { journals, handleSaveEntry } = useContext(JournalContext);
-  const today = new Date();
-  const formattedToday = today.toISOString().split('T')[0];
-  const entries = journals[formattedToday] || [''];
+  const { getEntriesForDate } = useContext(JournalContext);
+  const [entries, setEntries] = useState(() => getEntriesForDate(new Date(date)));
+  const { inputRefs, handleEntryChange, handleKeyActions } = useBulletEntries(date, entries, setEntries);
 
-  const { inputRefs, handleEntryChange, handleKeyActions } = useBulletEntries(
-    entries,
-    (updatedEntries) => handleSaveEntry(today, updatedEntries)
-  );
-
-  // Auto-adjust height effect
   useEffect(() => {
     inputRefs.current.forEach(textarea => {
       if (textarea) {
@@ -73,21 +17,13 @@ function BulletTextArea() {
         textarea.style.height = `${textarea.scrollHeight}px`;
       }
     });
-  }, [entries]); // Only re-run when entries change
+  }, [entries]);
 
   const handleFocus = (index) => {
-    if (window.innerWidth <= 768) { // Only navigate on mobile devices
-      navigate(`/entry/${formattedToday}/${index}`);
+    if (window.innerWidth <= 768) {
+      navigate(`/entry/${date}/${index}`);
     } else {
-      inputRefs.current[index].focus(); // Focus the textarea directly on desktops
-    }
-  };
-
-  const handleBlur = (index) => {
-    // Check if the last entry is not empty and add a new empty entry
-    if (index === entries.length - 1 && entries[index].trim() !== '') {
-      const updatedEntries = [...entries, ''];
-      handleSaveEntry(today, updatedEntries);
+      inputRefs.current[index].focus();
     }
   };
 
@@ -102,7 +38,6 @@ function BulletTextArea() {
             onChange={e => handleEntryChange(index, e.target.value)}
             onKeyDown={e => handleKeyActions(index, e)}
             onFocus={() => handleFocus(index)}
-            onBlur={() => handleBlur(index)}
             placeholder="New Bullet Point..."
             rows={1}
           />

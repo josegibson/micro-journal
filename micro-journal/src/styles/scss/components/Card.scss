@@ -4,11 +4,11 @@
     border-radius: 15px;
     background-color: inherit;
     transition: all 0.1s ease-in-out;
-    color: $primary-color;
+    color: $primary-color-light;
     padding: 25px 0px;
 
     h5 {
-        color: darken($primary-color, 60%);
+        color: darken($primary-color-light, 60%);
         font-weight: 900;
         padding-left: 30px;
     }
@@ -16,7 +16,7 @@
     @media (min-width: 769px) {
 
         &:hover {
-            background-color: lighten($bg-color, 5%);
+            background-color: lighten($bg-color-light, 5%);
         }
 
         h5{

@@ -1,3 +1,10 @@
+:root {
+  --primary-color-light: #ffffff;
+  --bg-color-light: #17171b;
+  --primary-color-dark: #17171b;
+  --bg-color-dark: #ffffff;
+}
+
 body {
   font-family: "Playfair Display", serif;
 }

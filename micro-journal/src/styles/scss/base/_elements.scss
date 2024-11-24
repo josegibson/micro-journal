@@ -1,8 +1,7 @@
 @import "./_variables";
 
-
 body {
-  background-color: $bg-color;
-  color: $primary-color;
+  background-color: var(--bg-color-light);
+  color: var(--primary-color-light);
 }
 

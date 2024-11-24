@@ -16,7 +16,7 @@
     
 
     &:hover {
-      background-color: darken($primary-color, 70%);
+      background-color: darken($primary-color-light, 70%);
     }
 
     .navbar-link {
@@ -45,17 +45,17 @@
     
     width: 100%;
 
-    border-top: 1px solid darken($primary-color, 70%);
+    border-top: 1px solid darken($primary-color-light, 70%);
 
 
     .navbar-item {
 
       margin: 0px;
 
-      color: darken($primary-color, 50%);
+      color: darken($primary-color-light, 50%);
       &.active {
         background-color: transparent;
-        color: $primary-color;
+        color: $primary-color-light;
       }
     }
 
@@ -78,7 +78,7 @@
 
       &.active {
         font-weight: bold;
-        background-color: darken($primary-color, 70%);
+        background-color: darken($primary-color-light, 70%);
       }
     }
 
