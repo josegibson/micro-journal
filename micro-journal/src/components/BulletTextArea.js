@@ -7,8 +7,15 @@ import { JournalContext } from './JournalProvider';
 function BulletTextArea({ date }) {
   const navigate = useNavigate();
   const { getEntriesForDate } = useContext(JournalContext);
-  const [entries, setEntries] = useState(() => getEntriesForDate(new Date(date)));
+  const [entries, setEntries] = useState([]);
   const { inputRefs, handleEntryChange, handleKeyActions } = useBulletEntries(date, entries, setEntries);
+
+  useEffect(() => {
+    console.log("Fetching entries for date:", date);
+    const initialEntries = getEntriesForDate(new Date(date));
+    console.log("Fetched entries:", initialEntries);
+    setEntries(initialEntries);
+  }, [date, getEntriesForDate]);
 
   useEffect(() => {
     inputRefs.current.forEach(textarea => {

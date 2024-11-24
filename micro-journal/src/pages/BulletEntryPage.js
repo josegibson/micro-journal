@@ -56,7 +56,7 @@ function BulletEntryPage() {
     }
 
     handleSaveEntry(new Date(date), updatedEntries);
-    navigate(`/${formattedDate}`);
+    navigate(-1);
   };
 
   const handleChange = (e) => {
