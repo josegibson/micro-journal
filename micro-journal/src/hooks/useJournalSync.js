@@ -1,6 +1,24 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+// Remove this
+const getApiBaseUrl = () => {
+  // Show the hostname we're detecting
+//   alert(`Hostname: ${window.location.hostname}`);
+  
+  // If accessing from localhost, use localhost
+//   if (window.location.hostname === 'localhost') {
+//     return 'http://localhost:5000';
+//   }
+  
+  // Otherwise, construct URL using the current hostname
+  const constructedUrl = `http://${window.location.hostname}:5000`;
+//   alert(`Using API URL: ${constructedUrl}`);
+  return constructedUrl;
+};
+
+const API_BASE_URL = getApiBaseUrl();
+console.log('Final API_BASE_URL:', API_BASE_URL);
 const STORAGE_KEY = 'journal_entries';
 
 export const useJournalSync = () => {
