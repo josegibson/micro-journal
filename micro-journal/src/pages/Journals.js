@@ -26,13 +26,12 @@ const JournalEntries = () => {
             onClick={() => handleCardClick(date)}
             style={{ cursor: "pointer" }}
           >
-
             <h5>{format(new Date(date), "EEE, dd MMM")}</h5>
             <ul>
-              {journals[date].map((entry, index) => {
-                const trimmedEntry = entry.trim();
-                if (!trimmedEntry) return null; // Skip empty entries
-                return <li key={index}>{trimmedEntry}</li>;
+              {journals[date].map((entry) => {
+                const trimmedEntry = entry.value.trim();
+                if (!trimmedEntry) return null;
+                return <li key={entry.key}>{trimmedEntry}</li>;
               })}
             </ul>
           </div>
