@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+const STORAGE_KEY = 'journal_entries';
 
 export const useJournalSync = () => {
   const [isOnline, setIsOnline] = useState(navigator.onLine);
@@ -21,34 +22,75 @@ export const useJournalSync = () => {
     };
   }, []);
 
-  // Fetch entries for a specific date from the backend
+  // Load entries from localStorage
+  const loadFromStorage = useCallback(() => {
+    try {
+      const stored = localStorage.getItem(STORAGE_KEY);
+      return stored ? JSON.parse(stored) : {};
+    } catch (error) {
+      console.error('Failed to load from localStorage:', error);
+      return {};
+    }
+  }, []);
+
+  // Save entries to localStorage
+  const saveToStorage = useCallback((entries) => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(entries));
+    } catch (error) {
+      console.error('Failed to save to localStorage:', error);
+    }
+  }, []);
+
+  // Fetch entries for a specific date
   const fetchEntries = useCallback(async (date) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/journals/${date}`);
-      if (!response.ok) throw new Error('Failed to fetch entries');
-      return await response.json();
+      // First check localStorage
+      const localEntries = loadFromStorage()[date];
+      
+      // If online, try to fetch from backend
+      if (isOnline) {
+        const response = await fetch(`${API_BASE_URL}/journals/${date}`);
+        if (response.ok) {
+          const serverEntries = await response.json();
+          // Update localStorage with server data
+          const allEntries = loadFromStorage();
+          allEntries[date] = serverEntries;
+          saveToStorage(allEntries);
+          return serverEntries;
+        }
+      }
+      
+      // Return local entries if they exist, or default empty entry
+      return localEntries || [{ key: Date.now(), value: '' }];
     } catch (error) {
       setError(error.message);
-      return null;
+      // Fallback to localStorage on error
+      return loadFromStorage()[date] || [{ key: Date.now(), value: '' }];
     }
-  }, []);
+  }, [isOnline, loadFromStorage, saveToStorage]);
 
-  // Save entries to the backend
+  // Save entries
   const saveEntries = useCallback(async (date, entries) => {
-    if (!isOnline) return false;
-
     try {
-      setIsSyncing(true);
-      const response = await fetch(`${API_BASE_URL}/journals/${date}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ entries }),
-      });
+      // Always save to localStorage first
+      const allEntries = loadFromStorage();
+      allEntries[date] = entries;
+      saveToStorage(allEntries);
 
-      if (!response.ok) throw new Error('Failed to save entries');
-      const data = await response.json();
+      // If online, sync with backend
+      if (isOnline) {
+        setIsSyncing(true);
+        const response = await fetch(`${API_BASE_URL}/journals/${date}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ entries }),
+        });
+
+        if (!response.ok) throw new Error('Failed to save entries');
+      }
       return true;
     } catch (error) {
       setError(error.message);
@@ -56,20 +98,23 @@ export const useJournalSync = () => {
     } finally {
       setIsSyncing(false);
     }
-  }, [isOnline]);
+  }, [isOnline, loadFromStorage, saveToStorage]);
 
-  // Clear all entries from the backend
+  // Clear all entries
   const clearAllEntries = useCallback(async () => {
-    if (!isOnline) return false;
-
     try {
-      setIsSyncing(true);
-      const response = await fetch(`${API_BASE_URL}/journals`, {
-        method: 'DELETE',
-      });
+      // Clear localStorage
+      localStorage.removeItem(STORAGE_KEY);
 
-      if (!response.ok) throw new Error('Failed to clear entries');
-      const data = await response.json();
+      // If online, clear backend
+      if (isOnline) {
+        setIsSyncing(true);
+        const response = await fetch(`${API_BASE_URL}/journals`, {
+          method: 'DELETE',
+        });
+
+        if (!response.ok) throw new Error('Failed to clear entries');
+      }
       return true;
     } catch (error) {
       setError(error.message);
@@ -79,17 +124,26 @@ export const useJournalSync = () => {
     }
   }, [isOnline]);
 
-  // Fetch all entries from the backend
+  // Fetch all entries
   const fetchAllEntries = useCallback(async () => {
     try {
-      const response = await fetch(`${API_BASE_URL}/journals`);
-      if (!response.ok) throw new Error('Failed to fetch all entries');
-      return await response.json();
+      // If online, fetch from backend and update localStorage
+      if (isOnline) {
+        const response = await fetch(`${API_BASE_URL}/journals`);
+        if (response.ok) {
+          const serverEntries = await response.json();
+          saveToStorage(serverEntries);
+          return serverEntries;
+        }
+      }
+      
+      // Fallback to localStorage
+      return loadFromStorage();
     } catch (error) {
       setError(error.message);
-      return null;
+      return loadFromStorage();
     }
-  }, []);
+  }, [isOnline, saveToStorage, loadFromStorage]);
 
   return {
     isOnline,
