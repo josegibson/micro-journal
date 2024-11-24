@@ -27,7 +27,6 @@ function BulletTextArea({ date }) {
   }, [entries]);
 
   useEffect(() => {
-    // Focus the first textarea by default upon mounting
     if (inputRefs.current[0]) {
       const firstTextarea = inputRefs.current[0];
       firstTextarea.focus();
@@ -35,13 +34,11 @@ function BulletTextArea({ date }) {
     }
   }, [inputRefs]);
 
-  const handleFocus = (index) => {
-    const filteredEntries = entries.filter((entry, i) => entry !== '' || i === entries.length - 1);
-    const actualIndex = filteredEntries.findIndex((_, i) => i === index);
-
+  const handleFocus = (key) => {
+    const index = entries.findIndex(entry => entry.key === key);
     if (window.innerWidth <= 768) {
       const formattedDate = new Date(date).toISOString().split('T')[0];
-      navigate(`/entry/${formattedDate}/${actualIndex}`);
+      navigate(`/entry/${formattedDate}/${index}`);
     } else {
       const textarea = inputRefs.current[index];
       if (textarea) {
@@ -54,16 +51,16 @@ function BulletTextArea({ date }) {
   return (
     <div className="bullet-container">
       {entries
-        .filter((entry, index) => entry !== '' || index === entries.length - 1)
+        .filter((entry, index) => entry.value !== '' || index === entries.length - 1)
         .map((entry, index) => (
-          <div key={index} className="bullet-item">
+          <div key={entry.key} className="bullet-item">
             <textarea
               ref={el => inputRefs.current[index] = el}
               className="text-input"
-              value={entry}
-              onChange={e => handleEntryChange(index, e.target.value)}
-              onKeyDown={e => handleKeyActions(index, e)}
-              onFocus={() => handleFocus(index)}
+              value={entry.value}
+              onChange={e => handleEntryChange(entry.key, e.target.value)}
+              onKeyDown={e => handleKeyActions(entry.key, e)}
+              onFocus={() => handleFocus(entry.key)}
               placeholder="New Bullet Point..."
               rows={1}
             />

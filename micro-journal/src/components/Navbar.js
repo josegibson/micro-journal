@@ -13,12 +13,10 @@ function Navbar() {
         { path: "/journals", icon: <FaJournalWhills size={20} />, label: "Journals" },
         { path: "/settings", icon: <FaCog size={20} />, label: "Settings" },
       ].map(({ path, icon, label }) => (
-        <div key={path} className={`navbar-item ${location.pathname === path ? "active" : ""}`}>
-          <Link className="navbar-link" to={path}>
-            {icon}
-            <span>{label}</span>
-          </Link>
-        </div>
+        <Link key={path} className={`navbar-item ${location.pathname === path ? "active" : ""}`} to={path}>
+          {icon}
+          <span>{label}</span>
+        </Link>
       ))}
     </nav>
   );

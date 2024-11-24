@@ -31,7 +31,7 @@ const JournalProvider = ({ children }) => {
 
   const handleSaveEntry = (date, newEntries) => {
     const formattedDate = date.toISOString().split('T')[0];
-    const existingEntries = state.journals[formattedDate] || [];
+    const existingEntries = state.journals[formattedDate] || [{ key: Date.now(), value: '' }];
 
     if (JSON.stringify(existingEntries) !== JSON.stringify(newEntries)) {
       dispatch({
@@ -43,7 +43,7 @@ const JournalProvider = ({ children }) => {
 
   const getEntriesForDate = (date) => {
     const formattedDate = date.toISOString().split('T')[0];
-    return state.journals[formattedDate] || [''];
+    return state.journals[formattedDate] || [{ key: Date.now(), value: '' }];
   };
 
   return (

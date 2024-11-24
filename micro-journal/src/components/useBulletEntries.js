@@ -4,7 +4,7 @@ import { JournalContext } from './JournalProvider';
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   for (let i = 0; i < arr1.length; i++) {
-    if (arr1[i] !== arr2[i]) return false;
+    if (arr1[i].value !== arr2[i].value) return false;
   }
   return true;
 }
@@ -15,25 +15,27 @@ export const useBulletEntries = (date, entries, setEntries) => {
 
   useEffect(() => {
     const dateStr = new Date(date).toISOString().split('T')[0];
-    const journalEntries = journals[dateStr] || [''];
+    const journalEntries = journals[dateStr] || [{ key: Date.now(), value: '' }];
 
     if (!arraysEqual(journalEntries, entries)) {
       setEntries(journalEntries);
     }
   }, [journals, date, setEntries]);
 
-  const handleEntryChange = (index, value) => {
-    let updatedEntries = [...entries];
-    updatedEntries[index] = value;
+  const handleEntryChange = (key, value) => {
+    let updatedEntries = entries.map(entry => 
+      entry.key === key ? { ...entry, value } : entry
+    );
 
     // Remove the entry if it is emptied and not the last one
-    if (value === '' && index !== entries.length - 1) {
-      updatedEntries = updatedEntries.filter((_, i) => i !== index);
+    if (value === '' && updatedEntries.length > 1) {
+      updatedEntries = updatedEntries.filter(entry => entry.key !== key);
+      focusInput(updatedEntries.length - 1);
     }
 
     // Ensure the last entry is always an empty string
-    if (updatedEntries[updatedEntries.length - 1].trim() !== '') {
-      updatedEntries.push('');
+    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
+      updatedEntries.push({ key: Date.now(), value: '' });
     }
 
     handleSaveEntry(new Date(date), updatedEntries);
@@ -52,22 +54,22 @@ export const useBulletEntries = (date, entries, setEntries) => {
     }, 0);
   };
 
-  const handleKeyActions = (index, event) => {
+  const handleKeyActions = (key, event) => {
+    const index = entries.findIndex(entry => entry.key === key);
     if (event.key === "Enter") {
       event.preventDefault();
-      if (entries[index]) {
+      if (entries[index].value) {
         const updatedEntries = [...entries];
-        updatedEntries[index] = entries[index];
         if (index === entries.length - 1) {
-          updatedEntries.push('');
+          updatedEntries.push({ key: Date.now(), value: '' });
         }
         handleSaveEntry(new Date(date), updatedEntries);
         setEntries(updatedEntries);
         focusInput(index + 1);
       }
-    } else if (event.key === "Backspace" && entries[index] === "" && index > 0) {
+    } else if (event.key === "Backspace" && entries[index].value === "" && index > 0) {
       event.preventDefault();
-      const updatedEntries = entries.filter((_, i) => i !== index);
+      const updatedEntries = entries.filter(entry => entry.key !== key);
       handleSaveEntry(new Date(date), updatedEntries);
       setEntries(updatedEntries);
       focusInput(index - 1);

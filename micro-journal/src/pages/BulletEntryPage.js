@@ -5,7 +5,7 @@ import { JournalContext } from '../components/JournalProvider';
 function arraysEqual(arr1, arr2) {
   if (arr1.length !== arr2.length) return false;
   for (let i = 0; i < arr1.length; i++) {
-    if (arr1[i] !== arr2[i]) return false;
+    if (arr1[i].value !== arr2[i].value) return false;
   }
   return true;
 }
@@ -17,16 +17,15 @@ function BulletEntryPage() {
   const formattedDate = new Date(date).toISOString().split('T')[0];
   const parsedIndex = parseInt(index, 10);
   const [entries, setEntries] = useState(() => getEntriesForDate(new Date(date)));
-  const [entry, setEntry] = useState(entries[parsedIndex] || '');
+  const [entry, setEntry] = useState(entries[parsedIndex]?.value || '');
   const textareaRef = useRef(null);
 
   useEffect(() => {
     const journalEntries = getEntriesForDate(new Date(date));
 
-    // Prevent unnecessary state updates
     if (!arraysEqual(journalEntries, entries)) {
       setEntries(journalEntries);
-      setEntry(journalEntries[parsedIndex] || '');
+      setEntry(journalEntries[parsedIndex]?.value || '');
     }
   }, [getEntriesForDate, date, parsedIndex, entries]);
 
@@ -52,13 +51,13 @@ function BulletEntryPage() {
   const handleSave = () => {
     const updatedEntries = [...entries];
     if (parsedIndex >= 0 && parsedIndex < updatedEntries.length) {
-      updatedEntries[parsedIndex] = entry;
+      updatedEntries[parsedIndex] = { ...updatedEntries[parsedIndex], value: entry };
     } else if (parsedIndex === updatedEntries.length) {
-      updatedEntries.push(entry);
+      updatedEntries.push({ key: Date.now(), value: entry });
     }
 
-    if (updatedEntries[updatedEntries.length - 1].trim() !== '') {
-      updatedEntries.push('');
+    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
+      updatedEntries.push({ key: Date.now(), value: '' });
     }
 
     handleSaveEntry(new Date(date), updatedEntries);
