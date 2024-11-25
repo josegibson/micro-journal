@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AppProvider } from "./providers/AppProvider";
 
 import JournalEntries from "./pages/Journals";
 import NewEntry from "./pages/NewEntry";
@@ -10,7 +11,7 @@ import BulletEntryPage from "./pages/BulletEntryPage";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
 
-function App() {
+function AppContent() {
   useEffect(() => {
     document.body.className = 'dark-mode';
   }, []);
@@ -43,6 +44,14 @@ function App() {
         />
       </Routes>
     </Router>
+  );
+}
+
+function App() {
+  return (
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 }
 

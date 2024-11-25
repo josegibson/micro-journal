@@ -1,10 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import { JournalContext } from "../providers/JournalProvider";
 import { format } from "date-fns";
+import { useApp } from '../providers/AppProvider';
 
 const JournalEntries = () => {
-  const { journals } = useContext(JournalContext);
+  const { journals } = useApp();
   const navigate = useNavigate();
 
   const handleCardClick = (date) => {

@@ -2,11 +2,10 @@ import React from "react";
 import BulletTextArea from "../components/BulletTextArea";
 import { format, parse, isValid } from "date-fns";
 import { useParams, Navigate } from "react-router-dom";
-import { useUser } from "../providers/UserProvider";
-import { JournalProvider } from '../providers/JournalProvider';
+import { useApp } from '../providers/AppProvider';
 
 function NewEntry() {
-  const { user } = useUser();
+  const { user } = useApp();
   const { date } = useParams();
   let formattedDate;
 
@@ -19,7 +18,6 @@ function NewEntry() {
     if (isValid(parsedDate)) {
       formattedDate = format(parsedDate, "yyyy-MM-dd");
     } else {
-      console.warn(`Invalid date format received: "${date}". Falling back to current date.`);
       formattedDate = format(new Date(), "yyyy-MM-dd");
     }
   } else {

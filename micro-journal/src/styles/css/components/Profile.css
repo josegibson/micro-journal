@@ -15,3 +15,85 @@ body::before {
   border-bottom: 2px solid black;
   content: "Error: Undefined variable.\a    \2577 \a 21 \2502          border: 1px solid $primary-color-light;\d\a    \2502                            ^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   src\\styles\\scss\\components\\Profile.scss 21:27  root stylesheet";
 }
+
+.profile-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.profile-header h1 {
+  margin: 0;
+  margin-left: 1rem;
+}
+
+.profile-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #2e2e37;
+  border-radius: 10px;
+}
+
+.profile-info {
+  margin-bottom: 2rem;
+}
+
+.info-group {
+  margin-bottom: 1.5rem;
+}
+
+.info-group label {
+  display: block;
+  color: #757589;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.info-value {
+  font-size: 1.1rem;
+  color: #fff;
+  padding: 0.5rem;
+  background-color: #17171b;
+  border-radius: 5px;
+}
+
+.status-indicator {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 1rem;
+  font-size: 0.9rem;
+}
+
+.status-indicator.online {
+  background-color: #198754;
+  color: white;
+}
+
+.status-indicator.offline {
+  background-color: #dc3545;
+  color: white;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.profile-footer {
+  margin-top: 2rem;
+  text-align: center;
+  color: #757589;
+  font-size: 0.9rem;
+}
+
+.btn-link {
+  color: #757589;
+  text-decoration: none;
+}
+
+.btn-link:hover {
+  color: #fff;
+}

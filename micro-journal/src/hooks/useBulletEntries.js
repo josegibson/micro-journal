@@ -1,8 +1,21 @@
-import { useRef, useContext, useState, useEffect } from "react";
-import { JournalContext } from '../providers/JournalProvider';
+import { useRef, useState, useEffect } from "react";
+import { useApp } from '../providers/AppProvider';
 
-// New hook for handling keyboard actions
-const useKeyboardActions = (entries, setEntries, handleSaveEntry, formattedDate, focusInput) => {
+export const useBulletEntries = (formattedDate) => {
+  const { getEntriesForDate, handleSaveEntry } = useApp();
+  const [entries, setEntries] = useState([]);
+  const inputRefs = useRef([]);
+
+  const focusInput = (index) => {
+    setTimeout(() => {
+      const input = inputRefs.current[index];
+      if (input) {
+        input.focus();
+        input.setSelectionRange(input.value.length, input.value.length);
+      }
+    }, 0);
+  };
+
   const handleKeyActions = (key, event) => {
     const index = entries.findIndex(entry => entry.key === key);
     if (event.key === "Enter") {
@@ -25,25 +38,24 @@ const useKeyboardActions = (entries, setEntries, handleSaveEntry, formattedDate,
     }
   };
 
-  return { handleKeyActions };
-};
+  const handleEntryChange = (key, value) => {
+    let updatedEntries = entries.map(entry => 
+      entry.key === key ? { ...entry, value } : entry
+    );
 
-export const useBulletEntries = (formattedDate) => {
-  const { getEntriesForDate, handleSaveEntry } = useContext(JournalContext);
-  const [entries, setEntries] = useState([]);
-  const inputRefs = useRef([]);
+    if (updatedEntries.length > 1) {
+      updatedEntries = updatedEntries.filter((entry, index) => 
+        index === updatedEntries.length - 1 || entry.value.trim() !== ''
+      );
+    }
 
-  const focusInput = (index) => {
-    setTimeout(() => {
-      const input = inputRefs.current[index];
-      if (input) {
-        input.focus();
-        input.setSelectionRange(input.value.length, input.value.length);
-      }
-    }, 0);
+    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
+      updatedEntries.push({ key: Date.now(), value: '' });
+    }
+
+    setEntries(updatedEntries);
+    handleSaveEntry(new Date(formattedDate), updatedEntries);
   };
-
-  const { handleKeyActions } = useKeyboardActions(entries, setEntries, handleSaveEntry, formattedDate, focusInput);
 
   useEffect(() => {
     if (formattedDate) {
@@ -54,27 +66,6 @@ export const useBulletEntries = (formattedDate) => {
       loadEntries();
     }
   }, [formattedDate, getEntriesForDate]);
-
-  const handleEntryChange = (key, value) => {
-    let updatedEntries = entries.map(entry => 
-      entry.key === key ? { ...entry, value } : entry
-    );
-
-    // Remove empty entries except the last one
-    if (updatedEntries.length > 1) {
-      updatedEntries = updatedEntries.filter((entry, index) => 
-        index === updatedEntries.length - 1 || entry.value.trim() !== ''
-      );
-    }
-
-    // Add new empty entry if the last one is not empty
-    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
-      updatedEntries.push({ key: Date.now(), value: '' });
-    }
-
-    setEntries(updatedEntries);
-    handleSaveEntry(new Date(formattedDate), updatedEntries);
-  };
 
   return {
     entries,
