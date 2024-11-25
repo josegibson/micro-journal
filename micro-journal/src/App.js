@@ -7,7 +7,6 @@ import NewEntry from "./pages/NewEntry";
 import Settings from "./pages/Settings";
 import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
-import BulletEntryPage from "./pages/BulletEntryPage";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
 
@@ -34,7 +33,6 @@ function AppContent() {
                     <Route path="/journals" element={<JournalEntries />} />
                     <Route path="/:date" element={<NewEntry />} />
                     <Route path="/settings" element={<Settings />} />
-                    <Route path="/entry/:date/:index" element={<BulletEntryPage />} />
                     <Route path="/profile" element={<Profile />} /> 
                   </Routes>
                 </div>

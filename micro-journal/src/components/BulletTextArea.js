@@ -1,46 +1,81 @@
 // src/components/BulletTextArea.js
-import React, { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useBulletEntries } from '../hooks/useBulletEntries';
+import React, { useEffect, useRef, useState } from "react";
+import { useApp } from '../providers/AppProvider';
 
-const useResponsiveFocus = (entries, date, navigate, focusInput) => {
-  const handleFocus = (key) => {
-    const index = entries.findIndex(entry => entry.key === key);
-    if (window.innerWidth <= 768) {
-      navigate(`/entry/${date}/${index}`);
-    } else {
-      focusInput(index);
+function BulletTextArea({ date }) {
+  const { getEntriesForDate, handleSaveEntry } = useApp();
+  const [entries, setEntries] = useState([]);
+  const inputRefs = useRef([]);
+  const [focusIndex, setFocusIndex] = useState(null);
+
+  const focusInput = (index) => {
+    const input = inputRefs.current[index];
+    if (input) {
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
     }
   };
 
-  return { handleFocus };
-};
-
-function BulletTextArea({ date }) {
-  const navigate = useNavigate();
-  const { 
-    entries, 
-    inputRefs, 
-    handleEntryChange, 
-    handleKeyActions,
-    focusInput 
-  } = useBulletEntries(date);
-  const { handleFocus } = useResponsiveFocus(entries, date, navigate, focusInput);
-
-  useEffect(() => {
-    inputRefs.current.forEach(textarea => {
-      if (textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
-      }
-    });
-  }, [entries]);
-
-  useEffect(() => {
-    if (inputRefs.current[0]) {
-      focusInput(0);
+  const handleKeyActions = (key, event, arrayIndex) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleEnterKey(arrayIndex);
+    } else if (event.key === "Backspace" && entries[arrayIndex].value === "" && arrayIndex > 0) {
+      event.preventDefault();
+      const updatedEntries = entries.filter(entry => entry.key !== key);
+      setEntries(updatedEntries);
+      handleSaveEntry(new Date(date), updatedEntries);
     }
-  }, []);
+  };
+
+  const handleEnterKey = (index) => {
+    if (entries[index].value.trim()) {
+      const updatedEntries = [...entries];
+      if (index === entries.length - 1) {
+        updatedEntries.push({ key: Date.now(), value: '' });
+        setEntries(updatedEntries);
+        handleSaveEntry(new Date(date), updatedEntries);
+      }
+      focusInput(index + 1);
+    }
+  };
+
+  const handleEntryChange = (key, value) => {
+    const updatedEntries = entries.map(entry => 
+      entry.key === key ? { ...entry, value } : entry
+    );
+
+    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
+      updatedEntries.push({ key: Date.now(), value: '' });
+    }
+
+    setEntries(updatedEntries);
+  };
+
+  const handleBlur = () => {
+    const nonEmptyEntries = entries.filter((entry, index) => 
+      entry.value.trim() !== '' || index === entries.length - 1
+    );
+    setEntries(nonEmptyEntries);
+    handleSaveEntry(new Date(date), nonEmptyEntries);
+  };
+
+  useEffect(() => {
+    if (date) {
+      const loadEntries = async () => {
+        const initialEntries = await getEntriesForDate(new Date(date));
+        setEntries(initialEntries);
+      };
+      loadEntries();
+    }
+  }, [date, getEntriesForDate]);
+
+  useEffect(() => {
+    if (focusIndex !== null) {
+      focusInput(focusIndex);
+      setFocusIndex(null);
+    }
+  }, [entries, focusIndex]);
 
   return (
     <div className="bullet-container">
@@ -51,8 +86,8 @@ function BulletTextArea({ date }) {
             className="text-input"
             value={entry.value}
             onChange={e => handleEntryChange(entry.key, e.target.value)}
-            onKeyDown={e => handleKeyActions(entry.key, e)}
-            onFocus={() => handleFocus(entry.key)}
+            onKeyDown={e => handleKeyActions(entry.key, e, index)}
+            onBlur={handleBlur}
             placeholder="New Bullet Point..."
             rows={1}
           />
