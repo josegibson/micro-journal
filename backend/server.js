@@ -1,32 +1,26 @@
 const express = require('express');
 const cors = require('cors');
-const sequelize = require('./config/database');
-const Journal = require('./models/Journal');
-const User = require('./models/User');
 const app = express();
-const port = process.env.PORT || 5000;
 
-sequelize.sync()
-  .then(() => {
-    console.log('Database synced');
-    return User.findAll();
-  })
-  .then(users => {
-    users.forEach(user => {
-      console.log(`User ID: ${user.id}, Username: ${user.username}`);
-    });
-  })
-  .catch(err => console.error('Database sync error:', err));
+// In-memory database
+const inMemoryDB = {
+  users: new Map(),  // Store users: Map<userId, userObject>
+  journals: new Map() // Store journals: Map<userId_date, journalObject>
+};
+
+let nextUserId = 1; // For auto-incrementing user IDs
 
 app.use(cors());
 app.use(express.json());
 
-// Request logging middleware
-app.use((req, res, next) => {
-  const timestamp = new Date().toISOString();
-  console.log(`[${timestamp}] ${req.method} ${req.url} ${req.headers['user-id']}`);
+// Simple request logger middleware
+const requestLogger = (req, res, next) => {
+  const userId = req.headers['user-id'] || 'no-user';
+  console.log(`[${req.method}] ${req.path} - User: ${userId}`);
   next();
-});
+};
+
+app.use(requestLogger);
 
 // User routes
 app.post('/users', async (req, res) => {
@@ -38,83 +32,68 @@ app.post('/users', async (req, res) => {
     }
 
     // Check if user exists
-    let user = await User.findOne({ where: { username } });
+    const existingUser = Array.from(inMemoryDB.users.values())
+      .find(u => u.username === username);
     
-    if (user) {
-      return res.json({ userId: user.id, username: user.username });
+    if (existingUser) {
+      return res.json(existingUser);
     }
 
     // Create new user
-    user = await User.create({ username });
-    console.log(`Created new user: ${username}`);
+    const user = {
+      userId: nextUserId++,
+      username,
+      createdAt: new Date()
+    };
+    inMemoryDB.users.set(user.userId, user);
     
-    res.status(201).json({ userId: user.id, username: user.username });
+    res.status(201).json(user);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
 // Journal routes
-app.get('/journals/:date', async (req, res) => {
-  try {
-    const { date } = req.params;
-    const userId = parseInt(req.headers['user-id'], 10);
-
-    if (isNaN(userId)) {
-      return res.status(400).json({ error: 'Invalid user ID' });
-    }
-
-    let journal = await Journal.findOne({ 
-      where: { userId, date }
-    });
-    
-    if (!journal) {
-      journal = await Journal.create({
-        userId,
-        date,
-        entries: [{ key: Date.now(), value: '' }]
-      });
-      console.log(`Created new entry for user ${userId} on date: ${date}`);
-    }
-
-    res.json(journal.entries);
-  } catch (error) {
-    console.error('Error fetching journal entries:', error);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 app.post('/journals/:date', async (req, res) => {
   try {
+    const userId = req.headers['user-id'];
     const { date } = req.params;
     const { entries } = req.body;
-    const userId = parseInt(req.headers['user-id']);
     
-    if (!entries) {
-      return res.status(400).json({ error: 'Entries are required' });
+    if (!userId || !date || !entries) {
+      return res.status(400).json({ error: 'UserId, date, and entries are required' });
     }
 
-    const [journal, created] = await Journal.findOrCreate({
-      where: { userId, date },
-      defaults: { entries }
-    });
+    const journalKey = `${userId}_${date}`;
+    const journal = {
+      id: journalKey,
+      userId,
+      date,
+      entries,
+      createdAt: new Date(),
+      updatedAt: new Date()
+    };
 
-    if (!created) {
-      await journal.update({ entries });
-    }
-
-    res.status(200).json({ message: 'Entries saved', journal });
+    inMemoryDB.journals.set(journalKey, journal);
+    res.status(201).json(journal);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.delete('/journals', async (req, res) => {
+app.get('/journals/:date', async (req, res) => {
   try {
-    const userId = parseInt(req.headers['user-id']);
-    console.log(`Clearing all journal entries for user ${userId}`);
-    await Journal.destroy({ where: { userId } });
-    res.status(200).json({ message: 'All entries cleared' });
+    const userId = req.headers['user-id'];
+    const { date } = req.params;
+    const journalKey = `${userId}_${date}`;
+    
+    const journal = inMemoryDB.journals.get(journalKey);
+    
+    if (!journal) {
+      return res.json([{ key: Date.now(), value: '' }]);
+    }
+    
+    res.json(journal.entries);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -122,23 +101,38 @@ app.delete('/journals', async (req, res) => {
 
 app.get('/journals', async (req, res) => {
   try {
-    const userId = parseInt(req.headers['user-id']);
-    const journals = await Journal.findAll({ where: { userId } });
-    const journalsMap = {};
-    journals.forEach(journal => {
-      journalsMap[journal.date] = journal.entries;
-    });
-    res.json(journalsMap);
+    const userId = req.headers['user-id'];
+    
+    const userJournals = {};
+    for (const [key, journal] of inMemoryDB.journals.entries()) {
+      if (journal.userId === userId) {
+        userJournals[journal.date] = journal.entries;
+      }
+    }
+    
+    res.json(userJournals);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Something went wrong!' });
+app.delete('/journals', async (req, res) => {
+  try {
+    const userId = req.headers['user-id'];
+    
+    for (const [key, journal] of inMemoryDB.journals.entries()) {
+      if (journal.userId === userId) {
+        inMemoryDB.journals.delete(key);
+      }
+    }
+    
+    res.status(204).send();
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
 });
 
-app.listen(port, '0.0.0.0', () => {
-  console.log(`Server is running on http://0.0.0.0:${port}`);
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
