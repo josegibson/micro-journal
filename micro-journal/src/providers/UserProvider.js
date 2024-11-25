@@ -11,33 +11,34 @@ export const useUser = () => {
 };
 
 export const UserProvider = ({ children }) => {
-  const [userId, setUserId] = useState(() => {
+  const [user, setUser] = useState(() => {
     try {
-      return localStorage.getItem('userId') || 'default-user';
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : { userId: 'default-user', username: 'Guest' };
     } catch (error) {
       console.error('Failed to access localStorage:', error);
-      return 'default-user';
+      return { userId: 'default-user', username: 'Guest' };
     }
   });
 
-  const updateUserId = (newUserId) => {
+  const updateUser = (newUser) => {
     try {
-      setUserId(newUserId);
-      localStorage.setItem('userId', newUserId);
+      setUser(newUser);
+      localStorage.setItem('user', JSON.stringify(newUser));
     } catch (error) {
       console.error('Failed to save to localStorage:', error);
     }
   };
 
   const logout = () => {
-    setUserId('default-user');
-    localStorage.removeItem('userId');
+    setUser({ userId: 'default-user', username: 'Guest' });
+    localStorage.removeItem('user');
     localStorage.removeItem('journal_entries'); // Clear journal entries
   };
 
   const value = {
-    userId,
-    updateUserId,
+    user,
+    updateUser,
     logout
   };
 

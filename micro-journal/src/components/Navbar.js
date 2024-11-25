@@ -10,6 +10,7 @@ function Navbar() {
       {[
         { path: "/new-entry", icon: <FaPen size={20} />, label: "New Entry" },
         { path: "/journals", icon: <FaJournalWhills size={20} />, label: "Journals" },
+        { path: "/profile", icon: <FaHome size={20} />, label: "Home" },
         { path: "/settings", icon: <FaCog size={20} />, label: "Settings" },
       ].map(({ path, icon, label }) => (
         <Link 

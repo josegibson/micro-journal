@@ -1,5 +1,5 @@
 import { useRef, useContext, useState, useEffect } from "react";
-import { JournalContext } from '../components/JournalProvider';
+import { JournalContext } from '../providers/JournalProvider';
 
 export const useBulletEntries = (formattedDate) => {
   const { getEntriesForDate, handleSaveEntry } = useContext(JournalContext);

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { JournalContext } from "../components/JournalProvider";
+import { JournalContext } from "../providers/JournalProvider";
 import { format } from "date-fns";
 
 const JournalEntries = () => {

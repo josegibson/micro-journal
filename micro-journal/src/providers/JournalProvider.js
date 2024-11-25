@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from 'react';
+import React, { createContext, useReducer, useEffect } from 'react';
 import { useJournalSync } from '../hooks/useJournalSync';
 
 const JournalContext = createContext();
@@ -47,6 +47,7 @@ const JournalProvider = ({ children }) => {
       payload: { date: formattedDate, entries: newEntries },
     });
 
+    // Removed immediate backend call
     if (isOnline) {
       await saveEntries(formattedDate, newEntries);
     }
