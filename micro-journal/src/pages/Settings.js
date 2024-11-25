@@ -1,10 +1,71 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { JournalContext } from '../providers/JournalProvider';
+import { useUser } from '../providers/UserProvider';
 
 function Settings() {
+  const { clearAllData, saveAllData, isOnline } = useContext(JournalContext);
+  const { logout } = useUser();
+  const navigate = useNavigate();
+  const [message, setMessage] = useState('');
+
+  const handleClearData = () => {
+    if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
+      clearAllData();
+      setMessage('All data has been cleared');
+      setTimeout(() => setMessage(''), 3000);
+    }
+  };
+
+  const handleSaveData = async () => {
+    if (!isOnline) {
+      setMessage('Cannot save data while offline');
+      setTimeout(() => setMessage(''), 3000);
+      return;
+    }
+
+    setMessage('Saving data...');
+    const success = await saveAllData();
+
+    if (success) {
+      setMessage('All data has been saved successfully');
+    } else {
+      setMessage('Failed to save data. Please try again.');
+    }
+
+    setTimeout(() => setMessage(''), 3000);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to logout?')) {
+      logout();
+    }
+  };
+
   return (
-    <div className="settings m-5">
-      <h2>Settings</h2>
-      <p>Adjust your preferences here.</p>
+    <div className="page">
+      <h1>Settings</h1>
+      <div className="settings-container">
+        <div className="settings-buttons">
+          <button
+            onClick={() => navigate('/profile')}
+          >
+            Profile
+          </button>
+          <button
+            onClick={handleSaveData}
+            disabled={!isOnline}
+          >
+            Sync
+          </button>
+          <button
+            onClick={handleClearData}
+          >
+            Clear Data
+          </button>
+        </div>
+        {message && <div className="alert alert-info">{message}</div>}
+      </div>
     </div>
   );
 }

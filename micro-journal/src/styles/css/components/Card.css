@@ -1,16 +1,22 @@
 .card {
-  background-color: #17171b;
-  border-style: none;
-  border-radius: 20px;
-  padding: 25px 20px;
-  text-align: start;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+  border-radius: 15px;
+  background-color: inherit;
   transition: all 0.1s ease-in-out;
+  color: #ffffff;
+  padding: 25px 0px;
 }
-.card:hover {
-  background-color: rgb(46.46, 46.46, 54.54);
+.card h5 {
+  color: #666666;
+  font-weight: 900;
+  padding-left: 30px;
+}
+@media (min-width: 769px) {
+  .card:hover {
+    background-color: rgb(34.73, 34.73, 40.77);
+  }
+  .card h5 {
+    padding-left: 35px;
+  }
 }
 
 /*# sourceMappingURL=Card.css.map */

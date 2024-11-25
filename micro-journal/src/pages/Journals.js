@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { JournalContext } from "../components/JournalProvider";
+import { JournalContext } from "../providers/JournalProvider";
 import { format } from "date-fns";
 
 const JournalEntries = () => {
@@ -8,36 +8,38 @@ const JournalEntries = () => {
   const navigate = useNavigate();
 
   const handleCardClick = (date) => {
-    const formattedDate = format(new Date(date), "yyyy-MM-dd"); // Ensure correct format
-    navigate(`/new-entry/${formattedDate}`);
+    navigate(`/${date}`);
   };
-  
+
+  const sortedDates = Object.keys(journals).sort((a, b) => new Date(b) - new Date(a));
 
   return (
-    <div className="text-center">
-      <h1>Journal</h1>
-      {Object.keys(journals).length === 0 ? (
+    <div className="page">
+      <h1 className="heading">Journal</h1>
+      {sortedDates.length === 0 ? (
         <p>No journal entries available.</p>
       ) : (
-        Object.keys(journals).map((date) => (
-          <div
-            key={date}
-            className="card"
-            onClick={() => handleCardClick(date)}
-            style={{ cursor: "pointer" }}
-          >
-            <div className="entry-header">
-              <h3>{format(new Date(date), "EEE, dd MMM")}</h3>
+        sortedDates.map((date) => {
+          const nonEmptyEntries = journals[date].filter(entry => entry.value.trim() !== '');
+          
+          if (nonEmptyEntries.length === 0) return null;
+          
+          return (
+            <div
+              key={date}
+              className="card"
+              onClick={() => handleCardClick(date)}
+              style={{ cursor: "pointer" }}
+            >
+              <h5>{format(new Date(date), "EEE, dd MMM")}</h5>
+              <ul>
+                {nonEmptyEntries.map((entry) => (
+                  <li key={entry.key}>{entry.value.trim()}</li>
+                ))}
+              </ul>
             </div>
-            <ul>
-              {journals[date].map((entry, index) => {
-                const trimmedEntry = entry.trim();
-                if (!trimmedEntry) return null; // Skip empty entries
-                return <li key={index}>{trimmedEntry}</li>;
-              })}
-            </ul>
-          </div>
-        ))
+          );
+        }).filter(Boolean)
       )}
     </div>
   );

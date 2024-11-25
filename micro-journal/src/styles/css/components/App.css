@@ -1,25 +1,53 @@
-.content {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
+body {
+  font-family: "Playfair Display", serif;
+  background-color: #17171b;
+  color: #ffffff;
+}
+
+ul li::marker {
+  color: #666666;
+}
+
+.page-container {
+  width: 100%;
   height: 100vh;
+  padding: 20px;
+}
+@media (min-width: 769px) {
+  .page-container {
+    width: 70%;
+    justify-items: center;
+  }
 }
 
-.center-active {
+.page {
+  text-align: left;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  height: 100%;
 }
-
-.dummy-container {
-  height: 100px;
+@media (min-width: 769px) {
+  .page {
+    width: 70%;
+  }
 }
-
-.entry-header {
+.page .heading {
+  padding-left: 20px;
+  color: #ffffff;
+  opacity: 0.3;
+}
+.page .entry-header {
+  position: sticky;
+  top: 0;
+  background-color: #17171b;
+  padding: 20px 0;
+  z-index: 10;
+  opacity: 0.5;
+}
+.page .entry-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  margin-left: 20px;
-  margin-bottom: 10px;
 }
 
 /*# sourceMappingURL=App.css.map */

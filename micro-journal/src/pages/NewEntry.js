@@ -1,24 +1,40 @@
+import React from "react";
 import BulletTextArea from "../components/BulletTextArea";
-import { format, parse } from "date-fns";
-import { useParams } from "react-router-dom";
+import { format, parse, isValid } from "date-fns";
+import { useParams, Navigate } from "react-router-dom";
+import { useUser } from "../providers/UserProvider";
+import { JournalProvider } from '../providers/JournalProvider';
 
 function NewEntry() {
+  const { user } = useUser();
+  const { date } = useParams();
+  let formattedDate;
 
-  const { date: dateParam } = useParams();
-  const date = dateParam ? parse(dateParam, "yyyy-MM-dd", new Date()) : new Date();
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
-  
-  console.log("dateParam:", dateParam);
-
+  if (date) {
+    const parsedDate = parse(date, "yyyy-MM-dd", new Date());
+    if (isValid(parsedDate)) {
+      formattedDate = format(parsedDate, "yyyy-MM-dd");
+    } else {
+      console.warn(`Invalid date format received: "${date}". Falling back to current date.`);
+      formattedDate = format(new Date(), "yyyy-MM-dd");
+    }
+  } else {
+    formattedDate = format(new Date(), "yyyy-MM-dd");
+  }
 
   return (
-    <div className="content center-active">
+    <div className="page entry">
       <div className="entry-header">
-        <h4>{format(date, "dd MMM")}</h4>
-        <h1>{format(date, "EEEE")}</h1>
+        <h2>Good Morning, {user.username}!</h2>
+        <label>{format(new Date(formattedDate), "dd MMM EEEE")}</label>
       </div>
-      <BulletTextArea date={date} />
-      <div className="dummy-container "></div>
+      <div className="entry-content">
+        <BulletTextArea date={formattedDate} />
+      </div>
     </div>
   );
 }

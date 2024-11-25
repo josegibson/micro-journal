@@ -1,55 +1,26 @@
-import React, { useState } from "react";
-import {
-  FaJournalWhills,
-  FaPen,
-  FaCog,
-  FaArrowLeft,
-  FaArrowRight,
-} from "react-icons/fa";
-import NavbarItem from "./NavbarItem"; // Import the NavbarItem component
-
-const navItems = [
-  { route: "/new-entry", label: "New Entry", icon: <FaPen size={16} /> },
-  {
-    route: "/journals",
-    label: "Journals",
-    icon: <FaJournalWhills size={16} />,
-  },
-
-  { route: "/settings", label: "Settings", icon: <FaCog size={16} /> },
-];
+import React from "react";
+import { useLocation, Link } from "react-router-dom";
+import { FaJournalWhills, FaPen, FaCog, FaHome } from "react-icons/fa";
 
 function Navbar() {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleNavbar = () => setIsExpanded((prev) => !prev);
+  const location = useLocation();
 
   return (
-    <nav className={`navbar ${isExpanded ? "expanded" : "collapsed"}`}>
-      <div className="navbar-content">
-        {navItems.map((item, index) => (
-          <NavbarItem
-            key={index}
-            route={item.route}
-            label={item.label}
-            icon={item.icon}
-            isExpanded={isExpanded}
-          />
-        ))}
-
-        <div className="navbar-toggle">
-          <button
-            onClick={toggleNavbar}
-            aria-label={isExpanded ? "Collapse navbar" : "Expand navbar"}
-          >
-            {isExpanded ? (
-              <FaArrowLeft size={16} />
-            ) : (
-              <FaArrowRight size={16} />
-            )}
-          </button>
-        </div>
-      </div>
+    <nav className="navbar">
+      {[
+        { path: "/new-entry", icon: <FaPen size={20} />, label: "New Entry" },
+        { path: "/journals", icon: <FaJournalWhills size={20} />, label: "Journals" },
+        { path: "/settings", icon: <FaCog size={20} />, label: "Settings" },
+      ].map(({ path, icon, label }) => (
+        <Link 
+          key={path} 
+          className={`navbar-item ${location.pathname === path ? "active" : ""}`} 
+          to={path}
+        >
+          {icon}
+          <span>{label}</span>
+        </Link>
+      ))}
     </nav>
   );
 }

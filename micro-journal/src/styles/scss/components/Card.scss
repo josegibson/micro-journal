@@ -1,18 +1,31 @@
 @import '../base/_variables.scss';
 
-.card{
-    background-color: $bg-color;
-    border-style: none;
-    border-radius: 20px;
-    padding: 25px 20px;
-    text-align: start;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.card {
+    border-radius: 15px;
+    background-color: inherit;
     transition: all 0.1s ease-in-out;
+    color: $primary-color-light;
+    padding: 25px 0px;
 
-    &:hover{
-        background-color: lighten($color: $bg-color, $amount: 10%);
+    h5 {
+        color: darken($primary-color-light, 60%);
+        font-weight: 900;
+        padding-left: 30px;
+    }
+
+    @media (min-width: 769px) {
+
+        &:hover {
+            background-color: lighten($bg-color-light, 5%);
+        }
+
+        h5{
+            padding-left: 35px;
+        }
+    }
+
+    @media (max-width: 768px) {
+
+
     }
 }
