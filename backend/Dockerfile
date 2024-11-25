@@ -13,11 +13,13 @@ RUN npm ci --only=production
 # Copy source code
 COPY . .
 
-# Expose the port your app runs on
-EXPOSE 3000
-
 # Set NODE_ENV
 ENV NODE_ENV=production
+
+# Make sure your server listens on 0.0.0.0
+ENV HOST=0.0.0.0
+
+EXPOSE $PORT
 
 # Start the application
 CMD ["npm", "start"]
