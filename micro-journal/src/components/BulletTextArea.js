@@ -40,7 +40,12 @@ function BulletTextArea({ date }) {
     }
   };
 
-  const handleEntryChange = (key, value) => {
+  const adjustTextAreaHeight = (textarea) => {
+    textarea.style.height = 'auto'; // Reset height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Set to scrollHeight
+  };
+
+  const handleEntryChange = (key, value, index) => {
     const updatedEntries = entries.map(entry => 
       entry.key === key ? { ...entry, value } : entry
     );
@@ -50,6 +55,9 @@ function BulletTextArea({ date }) {
     }
 
     setEntries(updatedEntries);
+
+    // Adjust the height of the current textarea
+    adjustTextAreaHeight(inputRefs.current[index]);
   };
 
   const handleBlur = () => {
@@ -77,6 +85,15 @@ function BulletTextArea({ date }) {
     }
   }, [entries, focusIndex]);
 
+  useEffect(() => {
+    // Adjust height for all textareas on initial load
+    entries.forEach((_, index) => {
+      if (inputRefs.current[index]) {
+        adjustTextAreaHeight(inputRefs.current[index]);
+      }
+    });
+  }, [entries]);
+
   return (
     <div className="bullet-container">
       {entries.map((entry, index) => (
@@ -85,11 +102,12 @@ function BulletTextArea({ date }) {
             ref={el => inputRefs.current[index] = el}
             className="text-input"
             value={entry.value}
-            onChange={e => handleEntryChange(entry.key, e.target.value)}
+            onChange={e => handleEntryChange(entry.key, e.target.value, index)}
             onKeyDown={e => handleKeyActions(entry.key, e, index)}
             onBlur={handleBlur}
             placeholder="New Bullet Point..."
             rows={1}
+            style={{ overflowY: 'auto' }} // Allow vertical scrollbar
           />
         </div>
       ))}

@@ -17,7 +17,15 @@ const actionTypes = {
 // Initial State
 const initialState = {
   journals: {},
-  user: null,
+  user: (() => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error('Failed to load initial user from localStorage:', error);
+      return null;
+    }
+  })(),
   isOnline: navigator.onLine
 };
 
@@ -83,7 +91,7 @@ export const AppProvider = ({ children }) => {
   // User Management
   const updateUser = useCallback((userData) => {
     try {
-      if (userData && typeof userData.userId === 'number') {
+      if (userData && (typeof userData.userId === 'number' || typeof userData.userId === 'string')) {
         dispatch({ type: actionTypes.SET_USER, payload: userData });
         localStorage.setItem('user', JSON.stringify(userData));
       } else {
@@ -144,18 +152,6 @@ export const AppProvider = ({ children }) => {
       await clearEntriesFromBackend(API_BASE_URL, state.user.userId);
     }
   }, [state.isOnline, state.user]);
-
-  // Load user from localStorage on mount
-  useEffect(() => {
-    try {
-      const storedUser = localStorage.getItem('user');
-      if (storedUser) {
-        updateUser(JSON.parse(storedUser));
-      }
-    } catch (error) {
-      console.error('Failed to load user from localStorage:', error);
-    }
-  }, [updateUser]);
 
   const value = {
     journals: state.journals,
