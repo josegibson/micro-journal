@@ -4,7 +4,7 @@ const sequelize = require('./config/database');
 const Journal = require('./models/Journal');
 const User = require('./models/User');
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 sequelize.sync()
   .then(() => {
