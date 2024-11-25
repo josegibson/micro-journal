@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
+import { saveEntriesToBackend, fetchEntriesFromBackend, clearEntriesFromBackend } from '../utils/api';
 
 const AppContext = createContext();
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
@@ -111,20 +112,7 @@ export const AppProvider = ({ children }) => {
     });
 
     if (state.isOnline && state.user) {
-      try {
-        const response = await fetch(`${API_BASE_URL}/journals/${formattedDate}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'user-id': state.user.userId.toString()
-          },
-          body: JSON.stringify({ entries: newEntries }),
-        });
-
-        if (!response.ok) throw new Error('Failed to save entries');
-      } catch (error) {
-        console.error('Failed to sync entries:', error);
-      }
+      await saveEntriesToBackend(API_BASE_URL, state.user.userId, formattedDate, newEntries);
     }
   }, [state.isOnline, state.user]);
 
@@ -136,21 +124,13 @@ export const AppProvider = ({ children }) => {
     }
 
     if (state.isOnline && state.user) {
-      try {
-        const response = await fetch(`${API_BASE_URL}/journals/${formattedDate}`, {
-          headers: { 'user-id': state.user.userId.toString() }
+      const entries = await fetchEntriesFromBackend(API_BASE_URL, state.user.userId, formattedDate);
+      if (entries) {
+        dispatch({
+          type: actionTypes.SET_ENTRIES,
+          payload: { date: formattedDate, entries },
         });
-        
-        if (response.ok) {
-          const entries = await response.json();
-          dispatch({
-            type: actionTypes.SET_ENTRIES,
-            payload: { date: formattedDate, entries },
-          });
-          return entries;
-        }
-      } catch (error) {
-        console.error('Failed to fetch entries:', error);
+        return entries;
       }
     }
     
@@ -161,18 +141,7 @@ export const AppProvider = ({ children }) => {
     dispatch({ type: actionTypes.CLEAR_ENTRIES });
     
     if (state.isOnline && state.user) {
-      try {
-        const response = await fetch(`${API_BASE_URL}/journals`, {
-          method: 'DELETE',
-          headers: {
-            'user-id': state.user.userId.toString()
-          }
-        });
-
-        if (!response.ok) throw new Error('Failed to clear entries');
-      } catch (error) {
-        console.error('Failed to clear remote data:', error);
-      }
+      await clearEntriesFromBackend(API_BASE_URL, state.user.userId);
     }
   }, [state.isOnline, state.user]);
 
