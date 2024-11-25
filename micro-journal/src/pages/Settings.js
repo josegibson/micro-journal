@@ -39,7 +39,6 @@ function Settings() {
   const handleLogout = () => {
     if (window.confirm('Are you sure you want to logout?')) {
       logout();
-      navigate('/login');
     }
   };
 
@@ -49,23 +48,20 @@ function Settings() {
       <div className="settings-container">
         <div className="settings-buttons">
           <button
+            onClick={() => navigate('/profile')}
+          >
+            Profile
+          </button>
+          <button
             onClick={handleSaveData}
             disabled={!isOnline}
-            className="btn btn-primary"
           >
-            Save All Data
+            Sync
           </button>
           <button
             onClick={handleClearData}
-            className="btn btn-danger"
           >
-            Clear All Data
-          </button>
-          <button
-            onClick={handleLogout}
-            className="btn btn-secondary"
-          >
-            Logout
+            Clear Data
           </button>
         </div>
         {message && <div className="alert alert-info">{message}</div>}

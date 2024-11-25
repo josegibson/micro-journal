@@ -1,22 +1,37 @@
-# Micro Journaling App
+# Micro Journal
 
-A simple micro journaling application built with React. This app allows users to create, edit, and delete journal entries easily. It provides a minimalistic interface for quick and effective journaling.
+A minimalist journaling application that focuses on simplicity and ease of use. Built to help users maintain daily journal entries with minimal friction.
 
-## Link https://josegibson.github.io/micro-journal/
-
-## Table of Contents
-
-- [Features](#features)
-- [Technologies Used](#technologies-used)
+## Live Demo
+https://josegibson.github.io/micro-journal/
 
 ## Features
 
-- Create new journal entries
-- Edit existing entries
-- Delete entries
-- User-friendly interface
-- Responsive design
+- 📝 Quick bullet-point journaling
+- 🔄 Offline-first with local storage sync
+- 📱 Responsive design (mobile & desktop)
+- 👤 Basic user authentication
+- 🌐 Cross-device synchronization
+- 🎨 Dark mode interface
 
-## Technologies Used
+## Tech Stack
 
-- **Frontend:** React, CSS
+### Frontend
+- React (Create React App)
+- React Router for navigation
+- SCSS for styling
+- Local Storage for offline data persistence
+
+### Backend
+- Express.js
+- SQLite with Sequelize ORM
+- Basic REST API
+
+## Limitations & Areas for Improvement
+
+- Basic authentication (no password protection)
+- Limited formatting options for journal entries
+- No data encryption at rest
+- No rich text or media support
+- Basic error handling
+- Limited test coverage

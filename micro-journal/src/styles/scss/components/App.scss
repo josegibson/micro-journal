@@ -2,6 +2,8 @@
 
 body{
     font-family: 'Playfair Display', serif;
+    background-color: $bg-color-light;
+    color: $primary-color-light;
 }
 
 ul {
@@ -9,8 +11,6 @@ ul {
         color: darken($primary-color-light, 60%);
     }
 }
-
-
 
 
 .page-container{
@@ -33,15 +33,26 @@ ul {
     text-align: left;
     display: flex;
     flex-direction: column;
+    height: 100%;
 
     .heading{
         padding-left: 20px;
+        color: $primary-color-light;
+        opacity: 0.3;
     }
 
-    &.entry{
-        height: 100%;
+    .entry-header {
+        position: sticky;
+        top: 0;
+        background-color: $bg-color-light;
+        padding: 20px 0;
+        z-index: 10;
+        opacity: 0.5;
+    }
+
+    .entry-content {
+        flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center;
-    }
+    }   
 }

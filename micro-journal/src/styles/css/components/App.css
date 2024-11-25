@@ -1,12 +1,7 @@
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
-}
-
 body {
   font-family: "Playfair Display", serif;
+  background-color: #17171b;
+  color: #ffffff;
 }
 
 ul li::marker {
@@ -29,6 +24,7 @@ ul li::marker {
   text-align: left;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 @media (min-width: 769px) {
   .page {
@@ -37,12 +33,21 @@ ul li::marker {
 }
 .page .heading {
   padding-left: 20px;
+  color: #ffffff;
+  opacity: 0.3;
 }
-.page.entry {
-  height: 100%;
+.page .entry-header {
+  position: sticky;
+  top: 0;
+  background-color: #17171b;
+  padding: 20px 0;
+  z-index: 10;
+  opacity: 0.5;
+}
+.page .entry-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
 }
 
 /*# sourceMappingURL=App.css.map */

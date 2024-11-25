@@ -2,7 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useUser } from '../providers/UserProvider';
 
 const getApiBaseUrl = () => {
-  return process.env.REACT_APP_BACKEND_URL;
+  const url = process.env.REACT_APP_BACKEND_URL;
+  return url ? url : `http://localhost:5000`;
 };
 
 const API_BASE_URL = getApiBaseUrl();
@@ -51,31 +52,25 @@ export const useJournalSync = () => {
   // Fetch entries for a specific date
   const fetchEntries = useCallback(async (date) => {
     try {
-      // First check localStorage
+      // Return empty entry if no user
+      if (!userId) {
+        return [{ key: Date.now(), value: '' }];
+      }
+
       const localEntries = loadFromStorage()[date];
-      
-      // If online, try to fetch from backend
       if (isOnline) {
         const response = await fetch(`${API_BASE_URL}/journals/${date}`, {
-          headers: {
-            'user-id': userId
-          }
+          headers: { 'user-id': userId.toString() }
         });
         if (response.ok) {
           const serverEntries = await response.json();
-          // Update localStorage with server data
-          const allEntries = loadFromStorage();
-          allEntries[date] = serverEntries;
-          saveToStorage(allEntries);
+          saveToStorage({ ...loadFromStorage(), [date]: serverEntries });
           return serverEntries;
         }
       }
-      
-      // Return local entries if they exist, or default empty entry
       return localEntries || [{ key: Date.now(), value: '' }];
     } catch (error) {
       setError(error.message);
-      // Fallback to localStorage on error
       return loadFromStorage()[date] || [{ key: Date.now(), value: '' }];
     }
   }, [isOnline, loadFromStorage, saveToStorage, userId]);
@@ -83,6 +78,9 @@ export const useJournalSync = () => {
   // Save entries
   const saveEntries = useCallback(async (date, entries) => {
     try {
+      if (!userId) {
+        throw new Error('No user logged in');
+      }
       // Always save to localStorage first
       const allEntries = loadFromStorage();
       allEntries[date] = entries;
@@ -95,7 +93,7 @@ export const useJournalSync = () => {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'user-id': userId
+            'user-id': userId.toString()
           },
           body: JSON.stringify({ entries }),
         });
@@ -123,7 +121,7 @@ export const useJournalSync = () => {
         const response = await fetch(`${API_BASE_URL}/journals`, {
           method: 'DELETE',
           headers: {
-            'user-id': userId
+            'user-id': userId.toString()
           }
         });
 
@@ -145,7 +143,7 @@ export const useJournalSync = () => {
       if (isOnline) {
         const response = await fetch(`${API_BASE_URL}/journals`, {
           headers: {
-            'user-id': userId
+            'user-id': userId.toString()
           }
         });
         if (response.ok) {

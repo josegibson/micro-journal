@@ -1,4 +1,5 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
+import { handleError } from '../utils/errorHandler';
 
 const UserContext = createContext();
 
@@ -14,30 +15,42 @@ export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
       const storedUser = localStorage.getItem('user');
-      return storedUser ? JSON.parse(storedUser) : { userId: 'default-user', username: 'Guest' };
+      return storedUser ? JSON.parse(storedUser) : null;
     } catch (error) {
       console.error('Failed to access localStorage:', error);
-      return { userId: 'default-user', username: 'Guest' };
+      return null;
     }
   });
 
   const updateUser = (newUser) => {
     try {
-      setUser(newUser);
-      localStorage.setItem('user', JSON.stringify(newUser));
+      if (newUser && typeof newUser.userId === 'number') {
+        setUser(newUser);
+        localStorage.setItem('user', JSON.stringify(newUser));
+      } else {
+        throw new Error('Invalid user data');
+      }
     } catch (error) {
-      console.error('Failed to save to localStorage:', error);
+      console.error(handleError(error, 'Failed to save user data.'));
     }
   };
 
-  const logout = () => {
-    setUser({ userId: 'default-user', username: 'Guest' });
+  const logout = useCallback(() => {
+    // Clear user data
+    setUser(null);
     localStorage.removeItem('user');
-    localStorage.removeItem('journal_entries'); // Clear journal entries
-  };
+    
+    // Clear any stored tokens or auth data
+    localStorage.removeItem('authToken');
+    
+    // Force reload to clear any in-memory state
+    window.location.href = '/login';
+  }, []);
 
+  // Ensure userId is always a number or null
   const value = {
-    user,
+    user: user || null,
+    userId: user?.userId || null,
     updateUser,
     logout
   };

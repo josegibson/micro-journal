@@ -48,10 +48,10 @@ function Login() {
             type="text"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter your username"
+            placeholder="Username"
             required
           />
-          <button type="submit">Start Journaling</button>
+          <button type="submit">Login</button>
         </form>
       </div>
     </div>

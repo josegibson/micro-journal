@@ -1,14 +1,18 @@
 import React from "react";
 import BulletTextArea from "../components/BulletTextArea";
 import { format, parse, isValid } from "date-fns";
-import { useParams } from "react-router-dom";
+import { useParams, Navigate } from "react-router-dom";
 import { useUser } from "../providers/UserProvider";
 import { JournalProvider } from '../providers/JournalProvider';
 
 function NewEntry() {
-  const { date } = useParams();
   const { user } = useUser();
+  const { date } = useParams();
   let formattedDate;
+
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
 
   if (date) {
     const parsedDate = parse(date, "yyyy-MM-dd", new Date());
@@ -24,15 +28,13 @@ function NewEntry() {
 
   return (
     <div className="page entry">
-      <h2>Good Morning, {user.username}!</h2>
-      <div className="heading">
-        <label>{format(new Date(formattedDate), "dd MMM")}</label>
-        <h1>{format(new Date(formattedDate), "EEEE")}</h1>
+      <div className="entry-header">
+        <h2>Good Morning, {user.username}!</h2>
+        <label>{format(new Date(formattedDate), "dd MMM EEEE")}</label>
       </div>
-      <br />
-      <BulletTextArea date={formattedDate} />
-      <br />
-      <br />
+      <div className="entry-content">
+        <BulletTextArea date={formattedDate} />
+      </div>
     </div>
   );
 }

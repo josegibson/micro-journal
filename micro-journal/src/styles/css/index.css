@@ -1,33 +1,14 @@
 @charset "UTF-8";
 @import url("https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap");
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
-}
-
 body {
   background-color: var(--bg-color-light);
   color: var(--primary-color-light);
 }
 
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
-}
-
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
-}
-
 body {
   font-family: "Playfair Display", serif;
+  background-color: #17171b;
+  color: #ffffff;
 }
 
 ul li::marker {
@@ -50,6 +31,7 @@ ul li::marker {
   text-align: left;
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 @media (min-width: 769px) {
   .page {
@@ -58,19 +40,21 @@ ul li::marker {
 }
 .page .heading {
   padding-left: 20px;
+  color: #ffffff;
+  opacity: 0.3;
 }
-.page.entry {
-  height: 100%;
+.page .entry-header {
+  position: sticky;
+  top: 0;
+  background-color: #17171b;
+  padding: 20px 0;
+  z-index: 10;
+  opacity: 0.5;
+}
+.page .entry-content {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-}
-
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
 }
 
 .navbar {
@@ -137,13 +121,6 @@ ul li::marker {
     display: inline;
   }
 }
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
-}
-
 .card {
   border-radius: 15px;
   background-color: inherit;
@@ -222,21 +199,29 @@ textarea::placeholder {
 }
 
 .settings-container {
-  padding: 20px;
   max-width: 600px;
 }
 .settings-container .settings-buttons {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 0;
   margin-bottom: 20px;
 }
 .settings-container .settings-buttons button {
-  padding: 10px 20px;
-  border-radius: 5px;
+  padding: 15px 20px;
   border: none;
   cursor: pointer;
   transition: opacity 0.2s;
+  text-align: left;
+  color: #ffffff;
+  background-color: transparent;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+.settings-container .settings-buttons button:last-child {
+  border-bottom: none;
+}
+.settings-container .settings-buttons button:hover {
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .login-page {
@@ -275,6 +260,30 @@ textarea::placeholder {
 }
 .login-page .login-container form button:hover {
   background-color: #0056b3;
+}
+
+.profile-container {
+  height: 85%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.profile-container .info-tile {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-primary);
+}
+.profile-container button {
+  border-radius: 8px;
+  padding: 6px;
+  border: 1px solid #ffffff;
+  background-color: transparent;
+  color: var(--text-primary);
 }
 
 /*# sourceMappingURL=index.css.map */

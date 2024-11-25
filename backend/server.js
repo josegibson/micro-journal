@@ -58,8 +58,12 @@ app.post('/users', async (req, res) => {
 app.get('/journals/:date', async (req, res) => {
   try {
     const { date } = req.params;
-    const userId = parseInt(req.headers['user-id']);
-    
+    const userId = parseInt(req.headers['user-id'], 10);
+
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: 'Invalid user ID' });
+    }
+
     let journal = await Journal.findOne({ 
       where: { userId, date }
     });
@@ -75,6 +79,7 @@ app.get('/journals/:date', async (req, res) => {
 
     res.json(journal.entries);
   } catch (error) {
+    console.error('Error fetching journal entries:', error);
     res.status(500).json({ error: error.message });
   }
 });

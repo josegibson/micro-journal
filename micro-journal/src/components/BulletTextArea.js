@@ -3,6 +3,19 @@ import React, { useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
 import { useBulletEntries } from '../hooks/useBulletEntries';
 
+const useResponsiveFocus = (entries, date, navigate, focusInput) => {
+  const handleFocus = (key) => {
+    const index = entries.findIndex(entry => entry.key === key);
+    if (window.innerWidth <= 768) {
+      navigate(`/entry/${date}/${index}`);
+    } else {
+      focusInput(index);
+    }
+  };
+
+  return { handleFocus };
+};
+
 function BulletTextArea({ date }) {
   const navigate = useNavigate();
   const { 
@@ -12,6 +25,7 @@ function BulletTextArea({ date }) {
     handleKeyActions,
     focusInput 
   } = useBulletEntries(date);
+  const { handleFocus } = useResponsiveFocus(entries, date, navigate, focusInput);
 
   useEffect(() => {
     inputRefs.current.forEach(textarea => {
@@ -27,15 +41,6 @@ function BulletTextArea({ date }) {
       focusInput(0);
     }
   }, []);
-
-  const handleFocus = (key) => {
-    const index = entries.findIndex(entry => entry.key === key);
-    if (window.innerWidth <= 768) {
-      navigate(`/entry/${date}/${index}`);
-    } else {
-      focusInput(index);
-    }
-  };
 
   return (
     <div className="bullet-container">

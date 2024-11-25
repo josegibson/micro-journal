@@ -1,12 +1,6 @@
 $primary-color-light: #ffffff;
 $bg-color-light: #17171b;
-$primary-color-dark: #17171b;
-$bg-color-dark: #ffffff;
 
-// CSS variables for runtime use
-:root {
-  --primary-color-light: #ffffff;
-  --bg-color-light: #17171b;
-  --primary-color-dark: #17171b;
-  --bg-color-dark: #ffffff;
-}
+// Use SCSS variables consistently
+$primary-color-dark: #17171b;
+$bg-color-dark: #000000;
