@@ -1,27 +1,8 @@
-/* Error: Undefined variable.
- *    ,
- * 21 |         border: 1px solid $primary-color-light;
- *    |                           ^^^^^^^^^^^^^^^^^^^^
- *    '
- *   src\styles\scss\components\Profile.scss 21:27  root stylesheet */
-
-body::before {
-  font-family: "Source Code Pro", "SF Mono", Monaco, Inconsolata, "Fira Mono",
-      "Droid Sans Mono", monospace, monospace;
-  white-space: pre;
-  display: block;
-  padding: 1em;
-  margin-bottom: 1em;
-  border-bottom: 2px solid black;
-  content: "Error: Undefined variable.\a    \2577 \a 21 \2502          border: 1px solid $primary-color-light;\d\a    \2502                            ^^^^^^^^^^^^^^^^^^^^\a    \2575 \a   src\\styles\\scss\\components\\Profile.scss 21:27  root stylesheet";
-}
-
 .profile-header {
   display: flex;
   align-items: center;
   margin-bottom: 2rem;
 }
-
 .profile-header h1 {
   margin: 0;
   margin-left: 1rem;
@@ -31,8 +12,8 @@ body::before {
   max-width: 600px;
   margin: 0 auto;
   padding: 2rem;
-  background-color: #2e2e37;
-  border-radius: 10px;
+  background-color: rgb(46.46, 46.46, 54.54);
+  border-radius: 15px;
 }
 
 .profile-info {
@@ -42,7 +23,6 @@ body::before {
 .info-group {
   margin-bottom: 1.5rem;
 }
-
 .info-group label {
   display: block;
   color: #757589;
@@ -52,7 +32,7 @@ body::before {
 
 .info-value {
   font-size: 1.1rem;
-  color: #fff;
+  color: #ffffff;
   padding: 0.5rem;
   background-color: #17171b;
   border-radius: 5px;
@@ -61,18 +41,16 @@ body::before {
 .status-indicator {
   display: inline-block;
   padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
+  border-radius: 50rem;
   font-size: 0.9rem;
 }
-
 .status-indicator.online {
   background-color: #198754;
-  color: white;
+  color: #ffffff;
 }
-
 .status-indicator.offline {
   background-color: #dc3545;
-  color: white;
+  color: #ffffff;
 }
 
 .profile-actions {
@@ -93,7 +71,8 @@ body::before {
   color: #757589;
   text-decoration: none;
 }
-
 .btn-link:hover {
-  color: #fff;
+  color: #ffffff;
 }
+
+/*# sourceMappingURL=Profile.css.map */

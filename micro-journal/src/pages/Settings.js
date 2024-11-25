@@ -33,19 +33,15 @@ function Settings() {
     <div className="page">
       <h1>Settings</h1>
       <div className="settings-container">
-        <div className="user-info">
-          <h3>Account</h3>
-          <p>Logged in as: {user?.username}</p>
-        </div>
 
-        <div className="settings-buttons">
+        <div className="buttons-container">
           <button
             onClick={() => navigate('/profile')}
             className="btn btn-primary"
           >
             Profile
           </button>
-          
+
           <button
             onClick={handleClearData}
             className="btn btn-danger"
@@ -53,7 +49,7 @@ function Settings() {
           >
             {isLoading ? 'Clearing...' : 'Clear All Data'}
           </button>
-          
+
           <button
             onClick={handleLogout}
             className="btn btn-warning"
@@ -61,23 +57,19 @@ function Settings() {
             Logout
           </button>
         </div>
-
-        {message && (
-          <div className={`alert ${message.includes('success') ? 'alert-success' : 'alert-danger'}`}>
-            {message}
-          </div>
-        )}
-        
-        {!isOnline && (
-          <div className="alert alert-warning">
-            You are currently offline. Some features may be limited.
-          </div>
-        )}
-
         <div className="settings-info">
-          <h3>About</h3>
-          <p>Version: 1.0.0</p>
-          <p>© 2024 Micro Journal</p>
+          {message && (
+            <div className={`alert ${message.includes('success') ? 'alert-success' : 'alert-danger'}`}>
+              {message}
+            </div>
+          )}
+
+          {!isOnline && (
+            <div className="alert alert-warning">
+              You are currently offline. Some features may be limited.
+            </div>
+          )}
+          <p className='text-center'>© 2024 Micro Journal</p>
         </div>
       </div>
     </div>
