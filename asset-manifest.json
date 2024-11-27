@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/micro-journal/static/css/main.331d23cc.css",
+    "main.js": "/micro-journal/static/js/main.c591a279.js",
+    "index.html": "/micro-journal/index.html",
+    "main.331d23cc.css.map": "/micro-journal/static/css/main.331d23cc.css.map",
+    "main.c591a279.js.map": "/micro-journal/static/js/main.c591a279.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.331d23cc.css",
+    "static/js/main.c591a279.js"
+  ]
+}
