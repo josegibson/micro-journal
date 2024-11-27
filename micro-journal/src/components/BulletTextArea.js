@@ -1,46 +1,98 @@
 // src/components/BulletTextArea.js
-import React, { useEffect } from "react";
-import { useNavigate } from 'react-router-dom';
-import { useBulletEntries } from '../hooks/useBulletEntries';
+import React, { useEffect, useRef, useState } from "react";
+import { useApp } from '../providers/AppProvider';
 
-const useResponsiveFocus = (entries, date, navigate, focusInput) => {
-  const handleFocus = (key) => {
-    const index = entries.findIndex(entry => entry.key === key);
-    if (window.innerWidth <= 768) {
-      navigate(`/entry/${date}/${index}`);
-    } else {
-      focusInput(index);
+function BulletTextArea({ date }) {
+  const { getEntriesForDate, handleSaveEntry } = useApp();
+  const [entries, setEntries] = useState([]);
+  const inputRefs = useRef([]);
+  const [focusIndex, setFocusIndex] = useState(null);
+
+  const focusInput = (index) => {
+    const input = inputRefs.current[index];
+    if (input) {
+      input.focus();
+      input.setSelectionRange(input.value.length, input.value.length);
     }
   };
 
-  return { handleFocus };
-};
+  const handleKeyActions = (key, event, arrayIndex) => {
+    if (event.key === "Enter") {
+      event.preventDefault();
+      handleEnterKey(arrayIndex);
+    } else if (event.key === "Backspace" && entries[arrayIndex].value === "" && arrayIndex > 0) {
+      event.preventDefault();
+      const updatedEntries = entries.filter(entry => entry.key !== key);
+      setEntries(updatedEntries);
+      handleSaveEntry(new Date(date), updatedEntries);
+    }
+  };
 
-function BulletTextArea({ date }) {
-  const navigate = useNavigate();
-  const { 
-    entries, 
-    inputRefs, 
-    handleEntryChange, 
-    handleKeyActions,
-    focusInput 
-  } = useBulletEntries(date);
-  const { handleFocus } = useResponsiveFocus(entries, date, navigate, focusInput);
+  const handleEnterKey = (index) => {
+    if (entries[index].value.trim()) {
+      const updatedEntries = [...entries];
+      if (index === entries.length - 1) {
+        updatedEntries.push({ key: Date.now(), value: '' });
+        setEntries(updatedEntries);
+        handleSaveEntry(new Date(date), updatedEntries);
+      }
+      focusInput(index + 1);
+    }
+  };
+
+  const adjustTextAreaHeight = (textarea) => {
+    textarea.style.height = 'auto'; // Reset height
+    textarea.style.height = `${textarea.scrollHeight}px`; // Set to scrollHeight
+  };
+
+  const handleEntryChange = (key, value, index) => {
+    const updatedEntries = entries.map(entry => 
+      entry.key === key ? { ...entry, value } : entry
+    );
+
+    if (updatedEntries[updatedEntries.length - 1].value.trim() !== '') {
+      updatedEntries.push({ key: Date.now(), value: '' });
+    }
+
+    setEntries(updatedEntries);
+
+    // Adjust the height of the current textarea
+    adjustTextAreaHeight(inputRefs.current[index]);
+  };
+
+  const handleBlur = () => {
+    const nonEmptyEntries = entries.filter((entry, index) => 
+      entry.value.trim() !== '' || index === entries.length - 1
+    );
+    setEntries(nonEmptyEntries);
+    handleSaveEntry(new Date(date), nonEmptyEntries);
+  };
 
   useEffect(() => {
-    inputRefs.current.forEach(textarea => {
-      if (textarea) {
-        textarea.style.height = 'auto';
-        textarea.style.height = `${textarea.scrollHeight}px`;
+    if (date) {
+      const loadEntries = async () => {
+        const initialEntries = await getEntriesForDate(new Date(date));
+        setEntries(initialEntries);
+      };
+      loadEntries();
+    }
+  }, [date, getEntriesForDate]);
+
+  useEffect(() => {
+    if (focusIndex !== null) {
+      focusInput(focusIndex);
+      setFocusIndex(null);
+    }
+  }, [entries, focusIndex]);
+
+  useEffect(() => {
+    // Adjust height for all textareas on initial load
+    entries.forEach((_, index) => {
+      if (inputRefs.current[index]) {
+        adjustTextAreaHeight(inputRefs.current[index]);
       }
     });
   }, [entries]);
-
-  useEffect(() => {
-    if (inputRefs.current[0]) {
-      focusInput(0);
-    }
-  }, []);
 
   return (
     <div className="bullet-container">
@@ -50,11 +102,12 @@ function BulletTextArea({ date }) {
             ref={el => inputRefs.current[index] = el}
             className="text-input"
             value={entry.value}
-            onChange={e => handleEntryChange(entry.key, e.target.value)}
-            onKeyDown={e => handleKeyActions(entry.key, e)}
-            onFocus={() => handleFocus(entry.key)}
+            onChange={e => handleEntryChange(entry.key, e.target.value, index)}
+            onKeyDown={e => handleKeyActions(entry.key, e, index)}
+            onBlur={handleBlur}
             placeholder="New Bullet Point..."
             rows={1}
+            style={{ overflowY: 'auto' }} // Allow vertical scrollbar
           />
         </div>
       ))}

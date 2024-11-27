@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../providers/UserProvider';
+import { useApp } from '../providers/AppProvider';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [error, setError] = useState('');
-  const { updateUser } = useUser();
+  const { updateUser } = useApp();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {

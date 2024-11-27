@@ -1,39 +1,26 @@
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { JournalContext } from '../providers/JournalProvider';
-import { useUser } from '../providers/UserProvider';
+import { useApp } from '../providers/AppProvider';
 
 function Settings() {
-  const { clearAllData, saveAllData, isOnline } = useContext(JournalContext);
-  const { logout } = useUser();
+  const { clearAllData, isOnline, logout, user } = useApp();
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleClearData = () => {
+  const handleClearData = async () => {
     if (window.confirm('Are you sure you want to clear all data? This cannot be undone.')) {
-      clearAllData();
-      setMessage('All data has been cleared');
-      setTimeout(() => setMessage(''), 3000);
+      setIsLoading(true);
+      try {
+        await clearAllData();
+        setMessage('All data has been cleared successfully');
+      } catch (error) {
+        setMessage('Failed to clear data. Please try again.');
+      } finally {
+        setIsLoading(false);
+        setTimeout(() => setMessage(''), 3000);
+      }
     }
-  };
-
-  const handleSaveData = async () => {
-    if (!isOnline) {
-      setMessage('Cannot save data while offline');
-      setTimeout(() => setMessage(''), 3000);
-      return;
-    }
-
-    setMessage('Saving data...');
-    const success = await saveAllData();
-
-    if (success) {
-      setMessage('All data has been saved successfully');
-    } else {
-      setMessage('Failed to save data. Please try again.');
-    }
-
-    setTimeout(() => setMessage(''), 3000);
   };
 
   const handleLogout = () => {
@@ -46,25 +33,44 @@ function Settings() {
     <div className="page">
       <h1>Settings</h1>
       <div className="settings-container">
-        <div className="settings-buttons">
+
+        <div className="buttons-container">
           <button
             onClick={() => navigate('/profile')}
+            className="btn btn-primary"
           >
             Profile
           </button>
-          <button
-            onClick={handleSaveData}
-            disabled={!isOnline}
-          >
-            Sync
-          </button>
+
           <button
             onClick={handleClearData}
+            className="btn btn-danger"
+            disabled={isLoading}
           >
-            Clear Data
+            {isLoading ? 'Clearing...' : 'Clear All Data'}
+          </button>
+
+          <button
+            onClick={handleLogout}
+            className="btn btn-warning"
+          >
+            Logout
           </button>
         </div>
-        {message && <div className="alert alert-info">{message}</div>}
+        <div className="settings-info">
+          {message && (
+            <div className={`alert ${message.includes('success') ? 'alert-success' : 'alert-danger'}`}>
+              {message}
+            </div>
+          )}
+
+          {!isOnline && (
+            <div className="alert alert-warning">
+              You are currently offline. Some features may be limited.
+            </div>
+          )}
+          <p className='text-center'>© 2024 Micro Journal</p>
+        </div>
       </div>
     </div>
   );

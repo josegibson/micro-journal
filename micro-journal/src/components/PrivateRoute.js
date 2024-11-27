@@ -1,10 +1,10 @@
 import { Navigate } from 'react-router-dom';
-import { useUser } from '../providers/UserProvider';
+import { useApp } from '../providers/AppProvider';
 
 const PrivateRoute = ({ children }) => {
-  const { userId } = useUser();
+  const { user } = useApp();
   
-  if (userId === 'default-user') {
+  if (!user) {
     return <Navigate to="/login" />;
   }
 

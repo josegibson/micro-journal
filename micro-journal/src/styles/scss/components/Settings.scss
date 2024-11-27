@@ -1,12 +1,13 @@
 .settings-container {
-  // padding: 20px;
-  max-width: 600px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 
-  .settings-buttons {
+  .buttons-container {
     display: flex;
     flex-direction: column;
-    gap: 0;
-    margin-bottom: 20px;
+
 
     button {
       padding: 15px 20px;
@@ -26,5 +27,9 @@
         background-color: rgba(255, 255, 255, 0.05);
       }
     }
+  }
+
+  .settings-info {
+    margin-top: auto;
   }
 } 
