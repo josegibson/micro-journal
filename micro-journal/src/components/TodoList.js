@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '../providers/AppProvider';
-import { FaTrash, FaCheck } from 'react-icons/fa';
+import { FaPlus, FaTimes, FaCheck } from 'react-icons/fa';
 
 function TodoList() {
   const { todos, addTodo, toggleTodo, removeTodo } = useApp();
@@ -21,30 +21,43 @@ function TodoList() {
           type="text"
           value={newTodo}
           onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add a new todo..."
+          placeholder="What needs to be done?"
           className="todo-input"
         />
-        <button type="submit" className="todo-add-btn">Add</button>
+        <button 
+          type="submit" 
+          className={`todo-add-btn ${newTodo.trim() ? 'active' : ''}`}
+          aria-label="Add task"
+        >
+          <FaPlus />
+        </button>
       </form>
 
       <ul className="todo-list">
-        {todos.map(todo => (
-          <li key={todo.id} className={`todo-item ${todo.completed ? 'completed' : ''}`}>
-            <button
-              onClick={() => toggleTodo(todo.id, !todo.completed)}
-              className="todo-check-btn"
-            >
-              <FaCheck />
-            </button>
-            <span className="todo-text">{todo.text}</span>
-            <button
-              onClick={() => removeTodo(todo.id)}
-              className="todo-delete-btn"
-            >
-              <FaTrash />
-            </button>
-          </li>
-        ))}
+        {todos.length === 0 ? (
+          <li className="todo-empty">No tasks yet. Add one above!</li>
+        ) : (
+          todos.map(todo => (
+            <li key={todo.id} className="todo-item">
+              <div className="todo-item-left">
+                <button
+                  onClick={() => toggleTodo(todo.id, !todo.completed)}
+                  className="todo-check-btn"
+                >
+                  <FaCheck />
+                </button>
+                <span className="todo-text">{todo.text}</span>
+              </div>
+              <button
+                onClick={() => removeTodo(todo.id)}
+                className="todo-delete-btn"
+                aria-label="Delete todo"
+              >
+                <FaTimes />
+              </button>
+            </li>
+          ))
+        )}
       </ul>
     </div>
   );
