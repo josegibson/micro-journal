@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useCallback } from 'react';
-import { saveEntriesToBackend, fetchEntriesFromBackend, clearEntriesFromBackend } from '../utils/api';
+import { saveEntriesToBackend, fetchEntriesFromBackend, clearEntriesFromBackend, fetchTodos, createTodo, updateTodo, deleteTodo } from '../utils/api';
 
 const AppContext = createContext();
 const API_BASE_URL = process.env.REACT_APP_BACKEND_URL || 'http://localhost:5000';
@@ -11,7 +11,11 @@ const actionTypes = {
   CLEAR_ENTRIES: 'CLEAR_ENTRIES',
   SET_USER: 'SET_USER',
   CLEAR_USER: 'CLEAR_USER',
-  SET_ONLINE: 'SET_ONLINE'
+  SET_ONLINE: 'SET_ONLINE',
+  SET_TODOS: 'SET_TODOS',
+  ADD_TODO: 'ADD_TODO',
+  UPDATE_TODO: 'UPDATE_TODO',
+  REMOVE_TODO: 'REMOVE_TODO'
 };
 
 // Initial State
@@ -26,7 +30,8 @@ const initialState = {
       return null;
     }
   })(),
-  isOnline: navigator.onLine
+  isOnline: navigator.onLine,
+  todos: []
 };
 
 // Reducer
@@ -64,6 +69,32 @@ const appReducer = (state, action) => {
       return {
         ...state,
         isOnline: action.payload
+      };
+
+    case actionTypes.SET_TODOS:
+      return {
+        ...state,
+        todos: action.payload
+      };
+      
+    case actionTypes.ADD_TODO:
+      return {
+        ...state,
+        todos: [...state.todos, action.payload]
+      };
+      
+    case actionTypes.UPDATE_TODO:
+      return {
+        ...state,
+        todos: state.todos.map(todo =>
+          todo.id === action.payload.id ? action.payload : todo
+        )
+      };
+      
+    case actionTypes.REMOVE_TODO:
+      return {
+        ...state,
+        todos: state.todos.filter(todo => todo.id !== action.payload)
       };
 
     default:
@@ -153,6 +184,47 @@ export const AppProvider = ({ children }) => {
     }
   }, [state.isOnline, state.user]);
 
+  const fetchUserTodos = useCallback(async () => {
+    if (state.isOnline && state.user) {
+      const todos = await fetchTodos(API_BASE_URL, state.user.userId);
+      dispatch({ type: actionTypes.SET_TODOS, payload: todos });
+    }
+  }, [state.isOnline, state.user]);
+
+  const addTodo = useCallback(async (text) => {
+    if (state.user) {
+      const todo = await createTodo(API_BASE_URL, state.user.userId, text);
+      if (todo) {
+        dispatch({ type: actionTypes.ADD_TODO, payload: todo });
+      }
+    }
+  }, [state.user]);
+
+  const toggleTodo = useCallback(async (todoId, completed) => {
+    if (state.user) {
+      const updated = await updateTodo(API_BASE_URL, state.user.userId, todoId, completed);
+      if (updated) {
+        dispatch({ type: actionTypes.UPDATE_TODO, payload: updated });
+      }
+    }
+  }, [state.user]);
+
+  const removeTodo = useCallback(async (todoId) => {
+    if (state.user) {
+      const success = await deleteTodo(API_BASE_URL, state.user.userId, todoId);
+      if (success) {
+        dispatch({ type: actionTypes.REMOVE_TODO, payload: todoId });
+      }
+    }
+  }, [state.user]);
+
+  // Add to useEffect for initial data loading
+  useEffect(() => {
+    if (state.user) {
+      fetchUserTodos();
+    }
+  }, [state.user, fetchUserTodos]);
+
   const value = {
     journals: state.journals,
     user: state.user,
@@ -161,7 +233,11 @@ export const AppProvider = ({ children }) => {
     getEntriesForDate,
     clearAllData,
     updateUser,
-    logout
+    logout,
+    todos: state.todos,
+    addTodo,
+    toggleTodo,
+    removeTodo
   };
 
   return (
