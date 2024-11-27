@@ -22,7 +22,7 @@ app.use('/users', userRoutes);
 app.use('/journals', journalRoutes);
 app.use('/todos', todoRoutes);
 
-// Error handling middleware
+// Single error handling middleware
 app.use((err, req, res, next) => {
   console.error('Error:', err.stack);
   res.status(500).json({ error: 'Something went wrong!' });
