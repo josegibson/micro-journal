@@ -9,6 +9,7 @@ import Login from "./pages/Login";
 import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
+import Todos from "./pages/Todos";
 
 function AppContent() {
   useEffect(() => {
@@ -31,6 +32,7 @@ function AppContent() {
                     <Route path="/" element={<NewEntry />} />
                     <Route path="/new-entry" element={<NewEntry />} />
                     <Route path="/journals" element={<JournalEntries />} />
+                    <Route path="/todos" element={<Todos />} />
                     <Route path="/:date" element={<NewEntry />} />
                     <Route path="/settings" element={<Settings />} />
                     <Route path="/profile" element={<Profile />} /> 

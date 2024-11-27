@@ -1,6 +1,6 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
-import { FaJournalWhills, FaPen, FaCog, FaHome } from "react-icons/fa";
+import { FaJournalWhills, FaPen, FaCog, FaHome, FaCheckSquare } from "react-icons/fa";
 
 function Navbar() {
   const location = useLocation();
@@ -10,6 +10,7 @@ function Navbar() {
       {[
         { path: "/new-entry", icon: <FaPen size={20} />, label: "New Entry" },
         { path: "/journals", icon: <FaJournalWhills size={20} />, label: "Journals" },
+        { path: "/todos", icon: <FaCheckSquare size={20} />, label: "Todos" },
         { path: "/settings", icon: <FaCog size={20} />, label: "Settings" },
       ].map(({ path, icon, label }) => (
         <Link 

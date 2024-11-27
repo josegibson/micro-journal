@@ -1,0 +1,72 @@
+.todo-container {
+  margin: 20px 0;
+  padding: 20px;
+  
+  .todo-form {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .todo-input {
+    flex: 1;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: $border-radius;
+    background: transparent;
+    color: $text-color;
+    
+    &:focus {
+      outline: none;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+  }
+  
+  .todo-add-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: $border-radius;
+    background: $primary-color;
+    color: white;
+    cursor: pointer;
+    
+    &:hover {
+      background: darken($primary-color, 10%);
+    }
+  }
+  
+  .todo-list {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .todo-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    
+    &.completed .todo-text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+  }
+  
+  .todo-check-btn,
+  .todo-delete-btn {
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    padding: 4px;
+    
+    &:hover {
+      color: $text-color;
+    }
+  }
+  
+  .todo-text {
+    flex: 1;
+  }
+} 
