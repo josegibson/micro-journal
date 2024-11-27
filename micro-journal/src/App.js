@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./providers/AppProvider";
 
 import JournalEntries from "./pages/Journals";
@@ -17,41 +17,43 @@ function AppContent() {
   }, []);
 
   return (
-    <Router>
-      <Routes>
-        <Route path="/login" element={<Login />} />
-        
-        <Route
-          path="/*"
-          element={
-            <PrivateRoute>
-              <div className="d-flex flex-row">
-                <Navbar />
-                <div className="page-container">
-                  <Routes>
-                    <Route path="/" element={<NewEntry />} />
-                    <Route path="/new-entry" element={<NewEntry />} />
-                    <Route path="/journals" element={<JournalEntries />} />
-                    <Route path="/todos" element={<Todos />} />
-                    <Route path="/:date" element={<NewEntry />} />
-                    <Route path="/settings" element={<Settings />} />
-                    <Route path="/profile" element={<Profile />} /> 
-                  </Routes>
-                </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      
+      <Route
+        path="/*"
+        element={
+          <PrivateRoute>
+            <div className="d-flex flex-row">
+              <Navbar />
+              <div className="page-container">
+                <Routes>
+                  <Route path="/" element={<NewEntry />} />
+                  <Route path="/new-entry" element={<NewEntry />} />
+                  <Route path="/journals" element={<JournalEntries />} />
+                  <Route path="/todos" element={<Todos />} />
+                  <Route path="/:date" element={<NewEntry />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/profile" element={<Profile />} /> 
+                </Routes>
               </div>
-            </PrivateRoute>
-          }
-        />
-      </Routes>
-    </Router>
+            </div>
+          </PrivateRoute>
+        }
+      />
+    </Routes>
   );
 }
 
 function App() {
+  const basename = process.env.PUBLIC_URL || '';
+  
   return (
-    <AppProvider>
-      <AppContent />
-    </AppProvider>
+    <Router basename={basename}>
+      <AppProvider>
+        <AppContent />
+      </AppProvider>
+    </Router>
   );
 }
 
