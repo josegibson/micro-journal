@@ -9,9 +9,7 @@ function Profile() {
   const [message, setMessage] = useState('');
 
   const handleLogout = () => {
-    if (window.confirm('Are you sure you want to logout?')) {
-      logout();
-    }
+    logout();
   };
 
   const handleBack = () => {
