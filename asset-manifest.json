@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/micro-journal/static/css/main.331d23cc.css",
-    "main.js": "/micro-journal/static/js/main.dfadf5ee.js",
+    "main.css": "/micro-journal/static/css/main.d3dbd58c.css",
+    "main.js": "/micro-journal/static/js/main.84d3cd76.js",
     "index.html": "/micro-journal/index.html",
-    "main.331d23cc.css.map": "/micro-journal/static/css/main.331d23cc.css.map",
-    "main.dfadf5ee.js.map": "/micro-journal/static/js/main.dfadf5ee.js.map"
+    "main.d3dbd58c.css.map": "/micro-journal/static/css/main.d3dbd58c.css.map",
+    "main.84d3cd76.js.map": "/micro-journal/static/js/main.84d3cd76.js.map"
   },
   "entrypoints": [
-    "static/css/main.331d23cc.css",
-    "static/js/main.dfadf5ee.js"
+    "static/css/main.d3dbd58c.css",
+    "static/js/main.84d3cd76.js"
   ]
 }
