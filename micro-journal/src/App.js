@@ -10,6 +10,7 @@ import Navbar from "./components/Navbar";
 import PrivateRoute from "./components/PrivateRoute";
 import Profile from "./pages/Profile";
 import Todos from "./pages/Todos";
+import NotFound from "./pages/NotFound";
 
 function AppContent() {
   useEffect(() => {
@@ -35,6 +36,7 @@ function AppContent() {
                   <Route path="/:date" element={<NewEntry />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/profile" element={<Profile />} /> 
+                  <Route path="*" element={<NotFound />} />
                 </Routes>
               </div>
             </div>
