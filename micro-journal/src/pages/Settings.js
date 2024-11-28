@@ -24,7 +24,7 @@ function Settings() {
   };
 
   const handleLogout = () => {
-    ogout();
+    logout();
   };
 
   return (
